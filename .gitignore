@@ -1,0 +1,80 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+database/*.db
+
+# Media files
+input/
+processing/
+output/
+posted/
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.mp3
+*.wav
+
+# Logs
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# MCP Cache
+mcp-cache/
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+
+# Model files
+*.pt
+*.pth
+*.h5
+*.pkl
+
+# Documentation build
+docs/_build/
+docs/.doctrees/
+
+# Operating System
+Thumbs.db
+.Spotlight-V100
+.Trashes
+
+# Project specific
+download_queue.json
+context/sessions/
+context/stack/*.tmp

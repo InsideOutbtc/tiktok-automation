@@ -1,0 +1,50 @@
+# Core dependencies
+python>=3.9
+moviepy==1.0.3
+opencv-python==4.8.1.78
+Pillow==10.1.0
+numpy==1.24.3
+scipy==1.11.4
+
+# Video/Audio processing
+ffmpeg-python==0.2.0
+pydub==0.25.1
+openai-whisper==20231117
+librosa==0.10.1
+
+# Web/API
+fastapi==0.104.1
+uvicorn==0.24.0
+requests==2.31.0
+beautifulsoup4==4.12.2
+yt-dlp==2023.12.30
+selenium==4.15.2
+
+# Database
+sqlalchemy==2.0.23
+alembic==1.12.1
+
+# AI/ML
+transformers==4.35.2
+torch==2.1.1
+
+# Constitutional AI Support
+mcp-client==0.1.0
+constitutional-ai==0.1.0
+
+# Utilities
+python-dotenv==1.0.0
+click==8.1.7
+schedule==1.2.0
+loguru==0.7.2
+pandas==2.1.3
+redis==5.0.1
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+
+# Monitoring
+prometheus-client==0.19.0
+structlog==23.2.0

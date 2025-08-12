@@ -1,0 +1,53 @@
+# Constitutional AI Settings
+constitutional_ai:
+  maximum_velocity: true
+  confirmation_required: false
+  autonomous_execution: true
+  error_handling: automatic
+  
+# Performance Standards
+performance_standards:
+  api_response: 22  # ms
+  agent_coordination: 200  # ms
+  video_processing: 30  # seconds per minute
+  clip_extraction: 10  # seconds per video
+  database_query: 5  # ms
+  
+# MCP Integration
+mcp_servers:
+  ref:
+    enabled: true
+    cache_size: 1GB
+    token_reduction: 0.85
+  semgrep:
+    enabled: true
+    auto_fix: true
+  pieces:
+    enabled: true
+    pattern_storage: automatic
+  exa:
+    enabled: true
+    research_cache: 24h
+  playwright:
+    enabled: true
+    
+# Video Settings
+video_settings:
+  output_width: 1080
+  output_height: 1920
+  fps: 30
+  min_clip_duration: 15
+  max_clip_duration: 45
+
+# Posting Configuration
+posting:
+  times: ["09:00", "13:00", "18:00", "21:00"]
+  max_per_day: 4
+  platforms: ["tiktok"]
+
+# Agent Configuration
+agents:
+  enabled: true
+  max_parallel: 3
+  timeout: 30
+  mode: maximum_velocity
