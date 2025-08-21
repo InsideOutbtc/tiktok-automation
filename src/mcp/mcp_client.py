@@ -29,9 +29,9 @@ class MCPClientManager:
         logger.info("Initializing MCP Client Manager")
         
         # Initialize individual servers
-        from .ref_integration import RefServer
-        from .pieces_memory import PiecesMemory
-        from .semgrep_scanner import SemgrepScanner
+        from src.mcp.ref_integration import RefServer
+        from src.mcp.pieces_memory import PiecesMemory
+        from src.mcp.semgrep_scanner import SemgrepScanner
         
         self.servers["ref"] = RefServer()
         self.servers["pieces"] = PiecesMemory()

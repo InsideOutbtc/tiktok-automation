@@ -25,10 +25,10 @@ class AIAgentSystem:
         logger.info("Initializing AI Agent System")
         
         # Import and initialize agents
-        from .content_agents.viral_scout import ViralScoutAgent
-        from .content_agents.clip_selector import ClipSelectorAgent
-        from .content_agents.hook_writer import HookWriterAgent
-        from .content_agents.engagement_predictor import EngagementPredictorAgent
+        from src.agents.content_agents.viral_scout import ViralScoutAgent
+        from src.agents.content_agents.clip_selector import ClipSelectorAgent
+        from src.agents.content_agents.hook_writer import HookWriterAgent
+        from src.agents.content_agents.engagement_predictor import EngagementPredictorAgent
         
         self.viral_scout = ViralScoutAgent()
         self.clip_selector = ClipSelectorAgent()

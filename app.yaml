@@ -30,3 +30,12 @@ services:
       - key: DATABASE_URL
         scope: RUN_TIME
         value: "sqlite:///app/database/tiktok.db"
+      - key: PYTHONPATH
+        scope: RUN_TIME
+        value: "/app"
+      - key: DEBUG
+        scope: RUN_TIME
+        value: "false"
+      - key: EMAIL_ADDRESS
+        scope: RUN_TIME
+        value: "hello.powerpro.social@gmail.com"

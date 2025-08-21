@@ -23,7 +23,7 @@ import yt_dlp
 import openai
 
 # Core imports
-from .error_handler import ErrorHandler, ErrorTier
+from src.core.error_handler import ErrorHandler, ErrorTier
 
 load_dotenv()
 logger = logging.getLogger(__name__)

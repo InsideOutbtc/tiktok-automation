@@ -61,3 +61,4 @@ infrastructure_status.json
 cookies.txt
 session.json
 EOF < /dev/null
+.env.digitalocean

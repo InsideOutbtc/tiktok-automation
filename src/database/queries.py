@@ -9,7 +9,7 @@ from sqlalchemy import and_, or_, desc
 from datetime import datetime, timedelta
 import logging
 
-from .models import Video, Clip, Publication, Pattern, Task
+from src.database.models import Video, Clip, Publication, Pattern, Task
 
 logger = logging.getLogger(__name__)
 

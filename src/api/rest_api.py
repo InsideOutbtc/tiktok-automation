@@ -13,8 +13,8 @@ from datetime import datetime
 import logging
 from cachetools import TTLCache
 
-from ..core.main_controller import MainController
-from ..utils.monitoring import MetricsCollector
+from src.core.main_controller import MainController
+from src.utils.monitoring import MetricsCollector
 
 logger = logging.getLogger(__name__)
 
