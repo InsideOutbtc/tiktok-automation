@@ -1,53 +1,188 @@
+# PowerPro TikTok Automation Configuration
+app:
+  name: "PowerPro TikTok Automation"
+  version: "1.0.0"
+  environment: "production"
+  debug: false
+
+brand:
+  name: "Power Pro"
+  handle: "@powerpro.social"
+  colors:
+    primary: "#FF6B35"
+    secondary: "#004E89"
+  
+tiktok:
+  username: "powerpro.social"
+  display_name: "Power Pro"
+  bio: "🏆 Quick fitness wins daily\n⚡ 15-30 sec transformations\n🔥 Science-backed + fun\n👇 Free workout guide"
+
+content_strategy:
+  mix:
+    viral_influencer_clips: 0.30
+    motivation_edits: 0.25
+    modern_bodybuilding_pros: 0.15
+    gym_training_form: 0.15
+    funny_gym_moments: 0.10
+    educational: 0.05
+  
+  influencers_to_monitor:
+    - "thetrentwins"
+    - "sam_sulek"
+    - "BradleyMartynOnline"
+    - "ChrisBumstead"
+    - "ShizzySam"
+    - "officialalexeubank"
+    - "JeffNippard"
+    - "GregDoucette"
+    - "RealTNF"
+
+posting:
+  schedule:
+    - "09:00"
+    - "12:00"
+    - "18:00"
+    - "21:00"
+  timezone: "America/New_York"
+  max_per_day: 4
+  
+video_settings:
+  output_width: 1080
+  output_height: 1920
+  fps: 30
+  min_duration: 15
+  max_duration: 45
+  format: "mp4"
+  
+watermark:
+  enabled: true
+  image: "assets/watermarks/powerpro_watermark_small.png"
+  position: "bottom-right"
+  opacity: 0.3
+  size: 0.08
+  margin: 20
+
+processing:
+  batch_size: 20
+  parallel_workers: 2
+  quality: "high"
+  
+storage:
+  retention_days: 7
+  archive_threshold_views: 10000
+  cleanup_time: "03:00"
+
+monitoring:
+  email: "hello.powerpro.social@gmail.com"
+  daily_summary: true
+  critical_alerts: true
+  summary_time: "07:00"
+
 # Constitutional AI Settings
 constitutional_ai:
   maximum_velocity: true
   confirmation_required: false
   autonomous_execution: true
   error_handling: automatic
-  
+  token_optimization_target: 0.85
+
 # Performance Standards
 performance_standards:
-  api_response: 22  # ms
-  agent_coordination: 200  # ms
-  video_processing: 30  # seconds per minute
-  clip_extraction: 10  # seconds per video
-  database_query: 5  # ms
-  
-# MCP Integration
+  api_response_ms: 22
+  db_query_ms: 5
+  agent_coordination_ms: 200
+  video_processing_seconds_per_minute: 30
+  clip_extraction_seconds: 10
+
+# Content Discovery
+content_discovery:
+  platforms:
+    - youtube
+    - tiktok
+  search_terms:
+    - "gym fails compilation"
+    - "fitness transformation"
+    - "gym stereotypes"
+    - "workout motivation"
+    - "fitness tips"
+    - "gym culture"
+    - "bodybuilding lifestyle"
+    - "CrossFit fails"
+    - "home workout"
+    - "fitness influencer"
+  discovery_interval_minutes: 5
+  min_viral_score: 0.7
+  max_content_per_cycle: 100
+
+# Video Processing
+video_processing:
+  min_clip_duration: 15
+  max_clip_duration: 45
+  target_clips_per_video: 5
+  effects:
+    - auto_caption
+    - hook_enhance
+    - energy_boost
+    - trending_music
+  output_resolution: "1080x1920"
+  output_fps: 30
+
+# AI Agents
+ai_agents:
+  viral_scout:
+    min_confidence: 0.7
+    pattern_weight: 0.3
+  clip_selector:
+    min_score: 0.7
+    max_clips: 5
+  hook_writer:
+    template_variety: 10
+    hashtag_count: 10
+  engagement_predictor:
+    prediction_window_days: 7
+    confidence_threshold: 0.75
+
+# MCP Servers
 mcp_servers:
   ref:
     enabled: true
-    cache_size: 1GB
-    token_reduction: 0.85
+    token_reduction_target: 0.85
+    cache_ttl_seconds: 3600
+  pieces:
+    enabled: true
+    pattern_storage: true
+    max_patterns: 10000
   semgrep:
     enabled: true
     auto_fix: true
-  pieces:
-    enabled: true
-    pattern_storage: automatic
-  exa:
-    enabled: true
-    research_cache: 24h
-  playwright:
-    enabled: true
-    
-# Video Settings
-video_settings:
-  output_width: 1080
-  output_height: 1920
-  fps: 30
-  min_clip_duration: 15
-  max_clip_duration: 45
+    scan_interval_minutes: 30
 
-# Posting Configuration
-posting:
-  times: ["09:00", "13:00", "18:00", "21:00"]
-  max_per_day: 4
-  platforms: ["tiktok"]
+# Database
+database:
+  type: sqlite
+  path: database/tiktok.db
+  connection_pool_size: 10
+  query_timeout_ms: 4
 
-# Agent Configuration
-agents:
-  enabled: true
-  max_parallel: 3
-  timeout: 30
-  mode: maximum_velocity
+# Logging
+logging:
+  level: INFO
+  format: json
+  file: logs/tiktok_ai.log
+  max_size_mb: 100
+  backup_count: 5
+
+# Error Recovery
+error_recovery:
+  tier1_retry_count: 3
+  tier1_retry_delay_seconds: 1
+  tier2_fallback_enabled: true
+  tier3_auto_restart: true
+  tier4_alert_only: true
+
+# System
+system:
+  max_concurrent_videos: 5
+  max_concurrent_api_requests: 20
+  memory_limit_gb: 8
+  cpu_cores: 4

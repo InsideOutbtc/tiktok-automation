@@ -1,0 +1,61 @@
+# Prometheus Configuration for TikTok AI Automation
+# Monitors Constitutional AI compliance metrics
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'tiktok-ai-monitor'
+
+# Alerting configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+# Rules for Constitutional AI compliance
+rule_files:
+  - 'constitutional_rules.yml'
+
+# Scrape configurations
+scrape_configs:
+  # TikTok AI API metrics
+  - job_name: 'tiktok-ai-api'
+    static_configs:
+      - targets: ['tiktok-ai:8000']
+    metrics_path: '/api/v1/metrics'
+    scrape_interval: 10s
+    
+  # Redis metrics
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']
+    
+  # Self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+# Constitutional AI compliance alerts
+# Create constitutional_rules.yml with:
+# groups:
+#   - name: constitutional_ai
+#     interval: 30s
+#     rules:
+#       - alert: APIResponseTimeViolation
+#         expr: api_response_time_ms > 22
+#         for: 1m
+#         annotations:
+#           summary: "API response time exceeds 22ms standard"
+#           
+#       - alert: TokenReductionViolation
+#         expr: token_reduction_rate < 0.85
+#         for: 5m
+#         annotations:
+#           summary: "Token reduction below 85% target"
+#           
+#       - alert: ErrorRecoveryViolation
+#         expr: error_recovery_rate < 0.95
+#         for: 5m
+#         annotations:
+#           summary: "Error recovery rate below 95% standard"

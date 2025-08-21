@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  powerpro:
+    build: .
+    container_name: powerpro-automation
+    environment:
+      - YOUTUBE_API_KEY=${YOUTUBE_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - AUTO_PUBLISH=false
+      - ENVIRONMENT=development
+    volumes:
+      - ./input:/app/input
+      - ./output:/app/output
+      - ./logs:/app/logs
+      - ./database:/app/database
+    restart: unless-stopped

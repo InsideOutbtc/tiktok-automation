@@ -1,0 +1,78 @@
+{
+  "logo": {
+    "primary": {
+      "dimensions": "1080x1080px",
+      "format": "PNG with transparency",
+      "style": "Bold, modern, readable at 50px",
+      "colors": [
+        "#FF6B35",
+        "white"
+      ],
+      "variations": [
+        "full",
+        "icon",
+        "wordmark"
+      ],
+      "usage": "Profile picture, watermark base"
+    }
+  },
+  "profile_picture": {
+    "tiktok": {
+      "dimensions": "200x200px",
+      "format": "JPG",
+      "design": "PowerPro logo on #FF6B35 background",
+      "border": "None"
+    }
+  },
+  "watermark": {
+    "video": {
+      "dimensions": "150x50px",
+      "format": "PNG with transparency",
+      "opacity": "70%",
+      "position": "bottom-right, 10px margin",
+      "text": "@powerpro"
+    }
+  },
+  "video_templates": {
+    "intro": {
+      "duration": "2 seconds",
+      "animation": "Fade in with pulse",
+      "colors": [
+        "#FF6B35",
+        "#004E89"
+      ],
+      "text": "PowerPro"
+    },
+    "outro": {
+      "duration": "3 seconds",
+      "cta": "Follow for more!",
+      "animation": "Slide up",
+      "include": [
+        "handle",
+        "logo"
+      ]
+    }
+  },
+  "thumbnail_templates": {
+    "style_1": {
+      "background": "#FF6B35",
+      "text_color": "white",
+      "font": "Bold sans-serif",
+      "elements": [
+        "exercise name",
+        "duration",
+        "difficulty"
+      ]
+    },
+    "style_2": {
+      "background": "gradient",
+      "overlay": "black 50%",
+      "text_color": "#004E89",
+      "elements": [
+        "before/after",
+        "results",
+        "testimonial"
+      ]
+    }
+  }
+}

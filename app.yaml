@@ -1,0 +1,32 @@
+name: powerpro-automation
+region: nyc
+services:
+  - name: worker
+    dockerfile_path: Dockerfile
+    source_dir: /
+    github:
+      repo: YOUR_GITHUB_USERNAME/tiktok-automation
+      branch: main
+      deploy_on_push: true
+    instance_size_slug: basic-s
+    instance_count: 1
+    health_check:
+      http_path: /health
+      initial_delay_seconds: 10
+      period_seconds: 30
+    envs:
+      - key: YOUTUBE_API_KEY
+        scope: RUN_TIME
+        type: SECRET
+      - key: OPENAI_API_KEY
+        scope: RUN_TIME
+        type: SECRET
+      - key: AUTO_PUBLISH
+        scope: RUN_TIME
+        value: "false"
+      - key: ENVIRONMENT
+        scope: RUN_TIME
+        value: "production"
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        value: "sqlite:///app/database/tiktok.db"

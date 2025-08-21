@@ -1,0 +1,21 @@
+# Essential requirements only
+python-dotenv
+pyyaml
+click
+aiohttp
+aiofiles
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+openai
+yt-dlp
+opencv-python-headless
+ffmpeg-python
+moviepy
+requests
+beautifulsoup4
+sqlalchemy
+fastapi
+uvicorn
+pytest
+pytest-asyncio

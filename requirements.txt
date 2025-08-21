@@ -1,50 +1,75 @@
+# TikTok AI Automation Requirements
+# Updated with specific versions for stability
+
 # Core dependencies
-python>=3.9
-moviepy==1.0.3
-opencv-python==4.8.1.78
-Pillow==10.1.0
-numpy==1.24.3
-scipy==1.11.4
+python-dotenv==1.0.0
+pyyaml==6.0.1
+click==8.1.7
+aiohttp==3.9.1
+aiofiles==23.2.1
 
-# Video/Audio processing
-ffmpeg-python==0.2.0
-pydub==0.25.1
-openai-whisper==20231117
-librosa==0.10.1
+# API integrations
+google-api-python-client==2.108.0
+google-auth-httplib2==0.1.1
+google-auth-oauthlib==1.1.0
+openai==1.6.1
+TikTokApi==6.2.0
 
-# Web/API
-fastapi==0.104.1
-uvicorn==0.24.0
-requests==2.31.0
-beautifulsoup4==4.12.2
+# Video processing
 yt-dlp==2023.12.30
-selenium==4.15.2
+opencv-python-headless==4.9.0.80
+ffmpeg-python==0.2.0
+Pillow==10.2.0
+moviepy==1.0.3
+imageio==2.33.1
+imageio-ffmpeg==0.4.9
+
+# Web automation
+playwright==1.40.0
+beautifulsoup4==4.12.2
+requests==2.31.0
+
+# AI/ML (optional but recommended)
+# whisper==1.1.10  # Commented out - large dependency
+numpy==1.24.3
+# torch==2.1.2  # Commented out - very large
+scikit-learn==1.3.2
+pandas==2.1.4
 
 # Database
 sqlalchemy==2.0.23
-alembic==1.12.1
+alembic==1.13.1
 
-# AI/ML
-transformers==4.35.2
-torch==2.1.1
-
-# Constitutional AI Support
-mcp-client==0.1.0
-constitutional-ai==0.1.0
-
-# Utilities
-python-dotenv==1.0.0
-click==8.1.7
-schedule==1.2.0
-loguru==0.7.2
-pandas==2.1.3
-redis==5.0.1
+# API framework
+fastapi==0.108.0
+uvicorn[standard]==0.25.0
+pydantic==2.5.3
+python-multipart==0.0.6
 
 # Testing
 pytest==7.4.3
 pytest-asyncio==0.21.1
 pytest-cov==4.1.0
+pytest-benchmark==4.0.0
 
 # Monitoring
 prometheus-client==0.19.0
+psutil==5.9.6
 structlog==23.2.0
+
+# Instagram (optional)
+instaloader==4.10.3
+
+# Redis (optional)
+redis==5.0.1
+# aioredis==2.0.1  # Deprecated, included in redis
+
+# Development
+black==23.12.1
+flake8==7.0.0
+pre-commit==3.6.0
+
+# Additional utilities
+tenacity==8.2.3
+cachetools==5.3.2
+croniter==2.0.1

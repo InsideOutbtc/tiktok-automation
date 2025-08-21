@@ -1,18 +1,17 @@
 # Python
+*.pyc
 __pycache__/
 *.py[cod]
 *$py.class
-*.so
-.Python
 venv/
 env/
-ENV/
-.venv
+.Python
 
 # Environment
 .env
 .env.local
-.env.*.local
+.env.production
+*.env
 
 # Database
 *.db
@@ -21,60 +20,44 @@ ENV/
 database/*.db
 
 # Media files
-input/
-processing/
-output/
-posted/
 *.mp4
-*.mov
 *.avi
+*.mov
 *.mkv
-*.mp3
-*.wav
+*.webm
+input/*
+output/*
+processing/*
+posted/*
+\!*/.gitkeep
 
 # Logs
-logs/
+logs/*
 *.log
+\!logs/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
 
 # IDE
 .vscode/
 .idea/
-*.swp
-*.swo
-*~
-.DS_Store
-
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-.hypothesis/
-
-# MCP Cache
-mcp-cache/
-
-# Temporary files
-*.tmp
-*.temp
-temp/
-
-# Model files
-*.pt
-*.pth
-*.h5
-*.pkl
-
-# Documentation build
-docs/_build/
-docs/.doctrees/
-
-# Operating System
-Thumbs.db
-.Spotlight-V100
-.Trashes
+*.sublime-*
 
 # Project specific
-download_queue.json
-context/sessions/
-context/stack/*.tmp
+temp/
+cache/
+downloads/
+*.tmp
+brand_options.json
+complete_brand_strategy.json
+engagement_report.json
+infrastructure_status.json
+
+# Sensitive
+cookies.txt
+session.json
+EOF < /dev/null

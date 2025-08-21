@@ -1,0 +1,792 @@
+{
+  "generated_at": "2025-08-14T23:30:34.885022",
+  "brand_names": [
+    {
+      "name": "PowerPro",
+      "tiktok": "@powerpro",
+      "instagram": "@powerpro",
+      "youtube": "youtube.com/@powerpro",
+      "domain": "powerpro.com",
+      "score": 90,
+      "availability": {
+        "tiktok": true,
+        "instagram": false,
+        "domain": false,
+        "trademark": "risky"
+      }
+    },
+    {
+      "name": "PowerDaily",
+      "tiktok": "@powerdaily",
+      "instagram": "@powerdaily",
+      "youtube": "youtube.com/@powerdaily",
+      "domain": "powerdaily.com",
+      "score": 87,
+      "availability": {
+        "tiktok": false,
+        "instagram": true,
+        "domain": true,
+        "trademark": "clear"
+      }
+    },
+    {
+      "name": "IronGuru",
+      "tiktok": "@ironguru",
+      "instagram": "@ironguru",
+      "youtube": "youtube.com/@ironguru",
+      "domain": "ironguru.com",
+      "score": 87,
+      "availability": {
+        "tiktok": false,
+        "instagram": true,
+        "domain": false,
+        "trademark": "taken"
+      }
+    },
+    {
+      "name": "IronLab",
+      "tiktok": "@ironlab",
+      "instagram": "@ironlab",
+      "youtube": "youtube.com/@ironlab",
+      "domain": "ironlab.com",
+      "score": 85,
+      "availability": {
+        "tiktok": false,
+        "instagram": false,
+        "domain": true,
+        "trademark": "risky"
+      }
+    },
+    {
+      "name": "Pulse360",
+      "tiktok": "@pulse360",
+      "instagram": "@pulse360",
+      "youtube": "youtube.com/@pulse360",
+      "domain": "pulse360.com",
+      "score": 84,
+      "availability": {
+        "tiktok": true,
+        "instagram": true,
+        "domain": false,
+        "trademark": "clear"
+      }
+    },
+    {
+      "name": "FlowMax",
+      "tiktok": "@flowmax",
+      "instagram": "@flowmax",
+      "youtube": "youtube.com/@flowmax",
+      "domain": "flowmax.com",
+      "score": 80,
+      "availability": {
+        "tiktok": true,
+        "instagram": false,
+        "domain": true,
+        "trademark": "clear"
+      }
+    },
+    {
+      "name": "BurnPlus",
+      "tiktok": "@burnplus",
+      "instagram": "@burnplus",
+      "youtube": "youtube.com/@burnplus",
+      "domain": "burnplus.com",
+      "score": 80,
+      "availability": {
+        "tiktok": true,
+        "instagram": true,
+        "domain": false,
+        "trademark": "taken"
+      }
+    },
+    {
+      "name": "RiseStudio",
+      "tiktok": "@risestudio",
+      "instagram": "@risestudio",
+      "youtube": "youtube.com/@risestudio",
+      "domain": "risestudio.com",
+      "score": 79,
+      "availability": {
+        "tiktok": true,
+        "instagram": false,
+        "domain": false,
+        "trademark": "taken"
+      }
+    },
+    {
+      "name": "FlowNation",
+      "tiktok": "@flownation",
+      "instagram": "@flownation",
+      "youtube": "youtube.com/@flownation",
+      "domain": "flownation.com",
+      "score": 79,
+      "availability": {
+        "tiktok": true,
+        "instagram": true,
+        "domain": true,
+        "trademark": "taken"
+      }
+    },
+    {
+      "name": "EliteZone",
+      "tiktok": "@elitezone",
+      "instagram": "@elitezone",
+      "youtube": "youtube.com/@elitezone",
+      "domain": "elitezone.com",
+      "score": 78,
+      "availability": {
+        "tiktok": true,
+        "instagram": true,
+        "domain": false,
+        "trademark": "risky"
+      }
+    },
+    {
+      "name": "BurnCoach",
+      "tiktok": "@burncoach",
+      "instagram": "@burncoach",
+      "youtube": "youtube.com/@burncoach",
+      "domain": "burncoach.com",
+      "score": 76,
+      "availability": {
+        "tiktok": true,
+        "instagram": false,
+        "domain": true,
+        "trademark": "clear"
+      }
+    },
+    {
+      "name": "IronNation",
+      "tiktok": "@ironnation",
+      "instagram": "@ironnation",
+      "youtube": "youtube.com/@ironnation",
+      "domain": "ironnation.com",
+      "score": 74,
+      "availability": {
+        "tiktok": true,
+        "instagram": true,
+        "domain": true,
+        "trademark": "taken"
+      }
+    },
+    {
+      "name": "SparkTribe",
+      "tiktok": "@sparktribe",
+      "instagram": "@sparktribe",
+      "youtube": "youtube.com/@sparktribe",
+      "domain": "sparktribe.com",
+      "score": 71,
+      "availability": {
+        "tiktok": false,
+        "instagram": true,
+        "domain": false,
+        "trademark": "risky"
+      }
+    },
+    {
+      "name": "PrimePlus",
+      "tiktok": "@primeplus",
+      "instagram": "@primeplus",
+      "youtube": "youtube.com/@primeplus",
+      "domain": "primeplus.com",
+      "score": 71,
+      "availability": {
+        "tiktok": false,
+        "instagram": false,
+        "domain": true,
+        "trademark": "taken"
+      }
+    },
+    {
+      "name": "CoreFactory",
+      "tiktok": "@corefactory",
+      "instagram": "@corefactory",
+      "youtube": "youtube.com/@corefactory",
+      "domain": "corefactory.com",
+      "score": 57,
+      "availability": {
+        "tiktok": false,
+        "instagram": true,
+        "domain": false,
+        "trademark": "clear"
+      }
+    },
+    {
+      "name": "StrongNation",
+      "tiktok": "@strongnation",
+      "instagram": "@strongnation",
+      "youtube": "youtube.com/@strongnation",
+      "domain": "strongnation.com",
+      "score": 54,
+      "availability": {
+        "tiktok": true,
+        "instagram": true,
+        "domain": true,
+        "trademark": "risky"
+      }
+    },
+    {
+      "name": "SparkNation",
+      "tiktok": "@sparknation",
+      "instagram": "@sparknation",
+      "youtube": "youtube.com/@sparknation",
+      "domain": "sparknation.com",
+      "score": 53,
+      "availability": {
+        "tiktok": true,
+        "instagram": false,
+        "domain": true,
+        "trademark": "taken"
+      }
+    },
+    {
+      "name": "RiseAcademy",
+      "tiktok": "@riseacademy",
+      "instagram": "@riseacademy",
+      "youtube": "youtube.com/@riseacademy",
+      "domain": "riseacademy.com",
+      "score": 53,
+      "availability": {
+        "tiktok": true,
+        "instagram": true,
+        "domain": false,
+        "trademark": "clear"
+      }
+    },
+    {
+      "name": "RiseFactory",
+      "tiktok": "@risefactory",
+      "instagram": "@risefactory",
+      "youtube": "youtube.com/@risefactory",
+      "domain": "risefactory.com",
+      "score": 52,
+      "availability": {
+        "tiktok": true,
+        "instagram": true,
+        "domain": true,
+        "trademark": "risky"
+      }
+    },
+    {
+      "name": "SwiftClinic",
+      "tiktok": "@swiftclinic",
+      "instagram": "@swiftclinic",
+      "youtube": "youtube.com/@swiftclinic",
+      "domain": "swiftclinic.com",
+      "score": 51,
+      "availability": {
+        "tiktok": false,
+        "instagram": false,
+        "domain": true,
+        "trademark": "taken"
+      }
+    }
+  ],
+  "color_schemes": [
+    {
+      "name": "Energy Rush",
+      "primary": "#FF6B35",
+      "secondary": "#004E89",
+      "accent": "#FFFFFF",
+      "black": "#1A1A1A",
+      "psychology": {
+        "emotions": [
+          "energetic",
+          "motivated",
+          "urgent"
+        ],
+        "best_for": [
+          "HIIT",
+          "cardio",
+          "challenges"
+        ],
+        "engagement_boost": "+23%"
+      },
+      "usage": {
+        "logo": "primary on white",
+        "videos": "accent overlays",
+        "thumbnails": "primary background"
+      }
+    },
+    {
+      "name": "Power Mode",
+      "primary": "#D62828",
+      "secondary": "#003049",
+      "accent": "#F77F00",
+      "black": "#0A0A0A",
+      "psychology": {
+        "emotions": [
+          "strong",
+          "determined",
+          "intense"
+        ],
+        "best_for": [
+          "strength",
+          "muscle",
+          "transformation"
+        ],
+        "engagement_boost": "+18%"
+      },
+      "usage": {
+        "logo": "primary gradient",
+        "videos": "secondary borders",
+        "thumbnails": "high contrast"
+      }
+    },
+    {
+      "name": "Fresh Start",
+      "primary": "#06FFA5",
+      "secondary": "#5E5E5E",
+      "accent": "#FFFFFF",
+      "black": "#2C2C2C",
+      "psychology": {
+        "emotions": [
+          "fresh",
+          "healthy",
+          "approachable"
+        ],
+        "best_for": [
+          "beginners",
+          "wellness",
+          "lifestyle"
+        ],
+        "engagement_boost": "+31%"
+      },
+      "usage": {
+        "logo": "primary on dark",
+        "videos": "primary highlights",
+        "thumbnails": "clean minimal"
+      }
+    }
+  ],
+  "content_strategy": {
+    "content_pillars": [
+      {
+        "name": "Quick Workouts",
+        "percentage": 40,
+        "formats": [
+          "15-30 second demos",
+          "follow-along",
+          "time-lapse"
+        ],
+        "frequency": "daily",
+        "best_times": [
+          "7:00 AM",
+          "5:00 PM"
+        ]
+      },
+      {
+        "name": "Form Corrections",
+        "percentage": 25,
+        "formats": [
+          "side-by-side",
+          "common mistakes",
+          "slow-motion"
+        ],
+        "frequency": "3x/week",
+        "best_times": [
+          "12:00 PM",
+          "7:00 PM"
+        ]
+      },
+      {
+        "name": "Transformation/Motivation",
+        "percentage": 20,
+        "formats": [
+          "before/after",
+          "day in life",
+          "testimonials"
+        ],
+        "frequency": "2x/week",
+        "best_times": [
+          "9:00 AM",
+          "8:00 PM"
+        ]
+      },
+      {
+        "name": "Challenges/Trends",
+        "percentage": 15,
+        "formats": [
+          "duets",
+          "trending audio",
+          "challenges"
+        ],
+        "frequency": "2x/week",
+        "best_times": [
+          "3:00 PM",
+          "9:00 PM"
+        ]
+      }
+    ],
+    "posting_schedule": [
+      {
+        "date": "2025-08-14",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Motivation Monday"
+      },
+      {
+        "date": "2025-08-15",
+        "posts": [
+          "12:00 PM - Form Check Friday",
+          "7:00 PM - Weekend Prep"
+        ],
+        "theme": "Technique Tuesday"
+      },
+      {
+        "date": "2025-08-16",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Workout Wednesday"
+      },
+      {
+        "date": "2025-08-17",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Throwback Thursday"
+      },
+      {
+        "date": "2025-08-18",
+        "posts": [
+          "7:00 AM - Motivation Monday",
+          "5:00 PM - Quick Workout"
+        ],
+        "theme": "Form Friday"
+      },
+      {
+        "date": "2025-08-19",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Sweat Saturday"
+      },
+      {
+        "date": "2025-08-20",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Self-care Sunday"
+      },
+      {
+        "date": "2025-08-21",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Motivation Monday"
+      },
+      {
+        "date": "2025-08-22",
+        "posts": [
+          "12:00 PM - Form Check Friday",
+          "7:00 PM - Weekend Prep"
+        ],
+        "theme": "Technique Tuesday"
+      },
+      {
+        "date": "2025-08-23",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Workout Wednesday"
+      },
+      {
+        "date": "2025-08-24",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Throwback Thursday"
+      },
+      {
+        "date": "2025-08-25",
+        "posts": [
+          "7:00 AM - Motivation Monday",
+          "5:00 PM - Quick Workout"
+        ],
+        "theme": "Form Friday"
+      },
+      {
+        "date": "2025-08-26",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Sweat Saturday"
+      },
+      {
+        "date": "2025-08-27",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Self-care Sunday"
+      },
+      {
+        "date": "2025-08-28",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Motivation Monday"
+      },
+      {
+        "date": "2025-08-29",
+        "posts": [
+          "12:00 PM - Form Check Friday",
+          "7:00 PM - Weekend Prep"
+        ],
+        "theme": "Technique Tuesday"
+      },
+      {
+        "date": "2025-08-30",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Workout Wednesday"
+      },
+      {
+        "date": "2025-08-31",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Throwback Thursday"
+      },
+      {
+        "date": "2025-09-01",
+        "posts": [
+          "7:00 AM - Motivation Monday",
+          "5:00 PM - Quick Workout"
+        ],
+        "theme": "Form Friday"
+      },
+      {
+        "date": "2025-09-02",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Sweat Saturday"
+      },
+      {
+        "date": "2025-09-03",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Self-care Sunday"
+      },
+      {
+        "date": "2025-09-04",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Motivation Monday"
+      },
+      {
+        "date": "2025-09-05",
+        "posts": [
+          "12:00 PM - Form Check Friday",
+          "7:00 PM - Weekend Prep"
+        ],
+        "theme": "Technique Tuesday"
+      },
+      {
+        "date": "2025-09-06",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Workout Wednesday"
+      },
+      {
+        "date": "2025-09-07",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Throwback Thursday"
+      },
+      {
+        "date": "2025-09-08",
+        "posts": [
+          "7:00 AM - Motivation Monday",
+          "5:00 PM - Quick Workout"
+        ],
+        "theme": "Form Friday"
+      },
+      {
+        "date": "2025-09-09",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Sweat Saturday"
+      },
+      {
+        "date": "2025-09-10",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Self-care Sunday"
+      },
+      {
+        "date": "2025-09-11",
+        "posts": [
+          "9:00 AM - Morning Routine",
+          "6:00 PM - Evening Burn"
+        ],
+        "theme": "Motivation Monday"
+      },
+      {
+        "date": "2025-09-12",
+        "posts": [
+          "12:00 PM - Form Check Friday",
+          "7:00 PM - Weekend Prep"
+        ],
+        "theme": "Technique Tuesday"
+      }
+    ],
+    "hashtag_strategy": {
+      "always_use": [
+        "#fitness",
+        "#workout",
+        "#fitnessmotivation",
+        "#gym",
+        "#fit"
+      ],
+      "rotate_set_a": [
+        "#homeworkout",
+        "#noequipment",
+        "#beginnerfitness",
+        "#quickworkout",
+        "#apartmentfriendly"
+      ],
+      "rotate_set_b": [
+        "#transformation",
+        "#beforeandafter",
+        "#fitnessjourney",
+        "#results",
+        "#progress"
+      ],
+      "trending": [
+        "#75hard",
+        "#gymtok",
+        "#fittok",
+        "#fitnesstok",
+        "#workoutroutine"
+      ],
+      "branded": [
+        "#[BRANDNAME]",
+        "#[BRANDNAME]Challenge",
+        "#[BRANDNAME]Family"
+      ]
+    },
+    "hooks_library": [
+      "STOP doing {exercise} wrong!",
+      "The #1 mistake killing your {bodypart} gains",
+      "POV: You finally learned proper {exercise} form",
+      "{number} seconds to transform your {bodypart}",
+      "Why you're not seeing results (harsh truth)",
+      "I did {exercise} every day for {days} days...",
+      "Trainers HATE this {adjective} trick",
+      "What {timeperiod} of {exercise} did to my body",
+      "{difficulty} vs Pro: {exercise} edition",
+      "You've been doing {exercise} wrong this whole time"
+    ]
+  },
+  "competitor_analysis": {
+    "top_competitors": [
+      {
+        "name": "ChloeTing",
+        "followers": "14.2M",
+        "engagement_rate": "8.5%",
+        "posting_frequency": "2x daily",
+        "content_types": [
+          "challenges",
+          "follow-along",
+          "results"
+        ],
+        "weaknesses": [
+          "less beginner content",
+          "intimidating for some"
+        ],
+        "strengths": [
+          "high production",
+          "proven results",
+          "community"
+        ]
+      },
+      {
+        "name": "MadFit",
+        "followers": "8.1M",
+        "engagement_rate": "7.2%",
+        "posting_frequency": "1x daily",
+        "content_types": [
+          "dance workouts",
+          "no equipment",
+          "apartment"
+        ],
+        "weaknesses": [
+          "less strength training",
+          "narrow niche"
+        ],
+        "strengths": [
+          "fun approach",
+          "accessible",
+          "consistent"
+        ]
+      },
+      {
+        "name": "GrowWithJo",
+        "followers": "5.3M",
+        "engagement_rate": "9.1%",
+        "posting_frequency": "2x daily",
+        "content_types": [
+          "walking workouts",
+          "beginner",
+          "motivation"
+        ],
+        "weaknesses": [
+          "limited advanced content",
+          "repetitive"
+        ],
+        "strengths": [
+          "inclusive",
+          "encouraging",
+          "beginner-friendly"
+        ]
+      }
+    ],
+    "content_gaps": [
+      "5-minute morning energizers",
+      "Form correction for beginners",
+      "Apartment-friendly HIIT",
+      "Flexibility for strength athletes",
+      "Workout snacks (30-second exercises)",
+      "Equipment-free muscle building",
+      "Post-workout stretching routines"
+    ],
+    "opportunity_score": 8.5,
+    "recommended_differentiation": [
+      "Focus on micro-workouts (15-30 seconds)",
+      "Emphasize form over intensity",
+      "Create inclusive beginner content",
+      "Use trending audio aggressively",
+      "Build community through challenges"
+    ]
+  }
+}
