@@ -15,22 +15,32 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 def setup_directories():
-    """Create all required directories"""
-    dirs = ['input', 'output', 'processing', 'posted', 'logs', 'database', 'assets/watermarks', 'assets/logos']
+    """Create all required directories with proper permissions"""
+    dirs = [
+        'input', 
+        'output', 
+        'processing', 
+        'posted', 
+        'logs', 
+        'database',  # Critical for SQLite
+        'assets/watermarks', 
+        'assets/logos'
+    ]
     for dir_name in dirs:
-        Path(dir_name).mkdir(parents=True, exist_ok=True)
-    logger.info("✅ All directories created")
+        dir_path = Path(dir_name)
+        dir_path.mkdir(parents=True, exist_ok=True)
+        # Ensure write permissions
+        os.chmod(str(dir_path), 0o755)
+        logger.info(f"✅ Created/verified directory: {dir_name}")
     
-def run_database_migrations():
-    """Run database migrations"""
-    try:
-        from src.database.migrations import run_migrations
-        if run_migrations():
-            logger.info("✅ Database migrations completed")
-        else:
-            logger.warning("⚠️ Database migrations had issues")
-    except Exception as e:
-        logger.error(f"❌ Migration error: {e}")
+    # Special handling for database file
+    db_path = Path('database/tiktok.db')
+    if not db_path.exists():
+        db_path.touch()  # Create empty file
+        os.chmod(str(db_path), 0o666)  # Read/write for all
+        logger.info("✅ Created database file with proper permissions")
+    
+    logger.info("✅ All directories and files ready")
 
 def check_environment():
     """Check if environment is properly configured"""
@@ -47,21 +57,56 @@ def check_environment():
     logger.info("✅ All API keys configured")
     return True
 
+def test_database_access():
+    """Test if we can access the database"""
+    try:
+        import sqlite3
+        # Try different paths
+        paths_to_try = [
+            'database/tiktok.db',
+            '/app/database/tiktok.db',
+            '/tmp/tiktok.db'
+        ]
+        
+        for db_path in paths_to_try:
+            try:
+                # Ensure directory exists
+                os.makedirs(os.path.dirname(db_path), exist_ok=True)
+                
+                # Try to connect
+                conn = sqlite3.connect(db_path)
+                conn.execute('SELECT 1')
+                conn.close()
+                
+                logger.info(f"✅ Database accessible at: {db_path}")
+                
+                # Set environment variable for the app
+                os.environ['DATABASE_PATH'] = db_path
+                return True
+                
+            except Exception as e:
+                logger.warning(f"Cannot access database at {db_path}: {e}")
+                continue
+        
+        logger.error("❌ No writable database location found")
+        return False
+        
+    except ImportError:
+        logger.error("❌ SQLite3 module not available")
+        return False
+
 def health_check_loop():
     """Keep container alive for DigitalOcean health checks"""
     logger.info("🏥 Running in health check mode (container staying alive)")
     logger.info("📝 To start processing: Create /tmp/start_processing file")
     
     while True:
-        # Log health status
         logger.info(f"💚 Health: OK | Time: {time.strftime('%Y-%m-%d %H:%M:%S')}")
         
-        # Check for manual start trigger
         if os.path.exists('/tmp/start_processing'):
             logger.info("🚀 Manual start triggered!")
             return True
             
-        # Check if AUTO_PUBLISH is true (ready for production)
         if os.getenv('AUTO_PUBLISH', 'false').lower() == 'true':
             logger.info("🚀 AUTO_PUBLISH enabled - starting automation")
             return True
@@ -78,20 +123,21 @@ def main():
         # Setup environment
         setup_directories()
         
-        # Run database migrations
-        run_database_migrations()
+        # Test database access
+        if not test_database_access():
+            logger.error("❌ Database access failed - entering health check mode")
+            health_check_loop()
+            return
         
         # Check configuration
         env_ready = check_environment()
         
-        # In production, always start with health check mode
+        # In production, check if we should start
         if os.getenv('ENVIRONMENT') == 'production':
             if not env_ready:
                 logger.info("⏸️ Missing configuration - staying in health check mode")
                 health_check_loop()
-                # If we get here, manual start was triggered
             
-            # Only proceed if AUTO_PUBLISH is true or manual trigger
             if os.getenv('AUTO_PUBLISH', 'false').lower() != 'true':
                 logger.info("⏸️ AUTO_PUBLISH=false - staying in health check mode")
                 if not health_check_loop():
@@ -100,6 +146,12 @@ def main():
         # Try to import and run main controller
         logger.info("🤖 Starting main automation system...")
         try:
+            # First, run migrations with the correct database path
+            from src.database.migrations import run_migrations
+            db_path = os.getenv('DATABASE_PATH', 'database/tiktok.db')
+            run_migrations(db_path)
+            
+            # Then start the main controller
             from src.core.main_wrapper import main as run_automation
             run_automation()
         except ImportError as e:

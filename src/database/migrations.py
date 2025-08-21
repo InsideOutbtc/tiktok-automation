@@ -6,11 +6,18 @@ from src.database.models import Base, engine
 
 logger = logging.getLogger(__name__)
 
-def run_migrations():
+def run_migrations(db_path=None):
     """Run database migrations"""
     try:
-        # Create all tables if they don't exist
-        Base.metadata.create_all(bind=engine)
+        # Use provided path or get from models
+        if db_path:
+            os.environ['DATABASE_PATH'] = db_path
+            from sqlalchemy import create_engine
+            custom_engine = create_engine(f'sqlite:///{db_path}', connect_args={"check_same_thread": False})
+            Base.metadata.create_all(bind=custom_engine)
+        else:
+            # Create all tables if they don't exist
+            Base.metadata.create_all(bind=engine)
         logger.info("✅ Database schema created/updated successfully")
         
         # Check if we need to migrate old metadata columns

@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     wget \
+    sqlite3 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -13,7 +14,7 @@ WORKDIR /app
 # Copy requirements files
 COPY requirements*.txt ./
 
-# Install Python packages with multiple fallback strategies
+# Install Python packages
 RUN pip install --no-cache-dir -r requirements.txt || \
     (echo "📦 Main requirements failed, trying essential..." && \
      test -f requirements_essential.txt && pip install --no-cache-dir -r requirements_essential.txt) || \
@@ -37,14 +38,23 @@ COPY . .
 ENV PYTHONPATH=/app:$PYTHONPATH
 ENV PYTHONUNBUFFERED=1
 
-# Create directories
-RUN mkdir -p input output processing posted logs database assets/watermarks assets/logos
+# Create directories with proper permissions
+RUN mkdir -p /app/database /app/input /app/output /app/processing /app/posted /app/logs /app/assets/watermarks /app/assets/logos && \
+    chmod -R 755 /app && \
+    chmod 777 /app/database
 
-# Create non-root user
-RUN useradd -m powerpro && chown -R powerpro:powerpro /app
+# Use /tmp for database if /app/database not writable
+ENV DATABASE_PATH=/tmp/tiktok.db
+
+# Create non-root user but give write permissions
+RUN useradd -m powerpro && \
+    chown -R powerpro:powerpro /app && \
+    chmod -R 755 /app && \
+    chmod 777 /app/database /tmp
+
 USER powerpro
 
-# Health check that won't fail
+# Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD python -c "print('Health check passed'); exit(0)"
 

@@ -9,8 +9,36 @@ from sqlalchemy.orm import sessionmaker, relationship
 from datetime import datetime
 import os
 
-# Database setup
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///tiktok_ai.db")
+# Database setup with flexible path
+def get_database_url():
+    """Get database URL with fallback options"""
+    # Check for explicit DATABASE_URL
+    if os.getenv("DATABASE_URL"):
+        return os.getenv("DATABASE_URL")
+    
+    # Check for DATABASE_PATH
+    db_path = os.getenv("DATABASE_PATH")
+    if db_path:
+        return f"sqlite:///{db_path}"
+    
+    # Try to find a writable location
+    possible_paths = [
+        "/tmp/tiktok.db",  # Always writable in containers
+        "database/tiktok.db",  # Local development
+        "/app/database/tiktok.db"  # Container path
+    ]
+    
+    for path in possible_paths:
+        try:
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            return f"sqlite:///{path}"
+        except:
+            continue
+    
+    # Default fallback
+    return "sqlite:///tiktok_ai.db"
+
+DATABASE_URL = get_database_url()
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
