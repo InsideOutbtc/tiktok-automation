@@ -62,4 +62,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD python -c "print('Health check passed'); exit(0)"
 
 # Use the safe wrapper that handles import failures gracefully
-CMD ["python", "start_safe.py"]
+# THIS IS THE CRITICAL FIX - ADD THE "start" ARGUMENT!
+CMD ["python", "start_safe.py", "start", "--max-velocity"]
