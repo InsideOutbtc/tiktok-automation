@@ -2,23 +2,30 @@
 import os
 import logging
 from sqlalchemy import create_engine, text
-from src.database.models import Base, engine
+from src.database.models import Base
 
 logger = logging.getLogger(__name__)
 
 def run_migrations(db_path=None):
     """Run database migrations"""
     try:
-        # Use provided path or get from models
-        if db_path:
-            os.environ['DATABASE_PATH'] = db_path
-            from sqlalchemy import create_engine
-            custom_engine = create_engine(f'sqlite:///{db_path}', connect_args={"check_same_thread": False})
-            Base.metadata.create_all(bind=custom_engine)
-        else:
-            # Create all tables if they don't exist
-            Base.metadata.create_all(bind=engine)
-        logger.info("✅ Database schema created/updated successfully")
+        if not db_path:
+            # Use environment variable or default
+            db_path = os.getenv('DATABASE_PATH', os.path.abspath('database/tiktok.db'))
+        
+        # Ensure absolute path
+        db_path = os.path.abspath(db_path)
+        
+        logger.info(f"Migrations: Using database at {db_path}")
+        
+        # Ensure directory exists
+        os.makedirs(os.path.dirname(db_path), exist_ok=True)
+        
+        # Create engine and tables
+        engine = create_engine(f'sqlite:///{db_path}', connect_args={"check_same_thread": False})
+        Base.metadata.create_all(bind=engine)
+        
+        logger.info("✅ Database migrations completed")
         
         # Check if we need to migrate old metadata columns
         # This is safe to run multiple times

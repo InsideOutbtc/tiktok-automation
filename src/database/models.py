@@ -163,7 +163,44 @@ class Task(Base):
     )
 
 
-# Create tables
+# Database initialization function
+def init_db(db_path=None):
+    """Initialize database with consistent path"""
+    global engine, SessionLocal
+    
+    if not db_path:
+        # First check environment variables
+        db_path = os.getenv('DATABASE_PATH')
+        
+        if not db_path:
+            # Use DATABASE_URL if set
+            db_url = os.getenv('DATABASE_URL')
+            if db_url and db_url.startswith('sqlite:///'):
+                db_path = db_url.replace('sqlite:///', '')
+        
+        if not db_path:
+            # Default to absolute path
+            db_path = os.path.abspath('database/tiktok.db')
+    
+    # Ensure it's absolute
+    db_path = os.path.abspath(db_path)
+    
+    # Log the path being used
+    print(f"Database: Using path {db_path}")
+    
+    # Ensure directory exists
+    os.makedirs(os.path.dirname(db_path), exist_ok=True)
+    
+    # Create engine with absolute path
+    engine = create_engine(f'sqlite:///{db_path}', connect_args={"check_same_thread": False})
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    
+    # Create tables
+    Base.metadata.create_all(bind=engine)
+    return engine
+
+
+# Create tables with default setup
 Base.metadata.create_all(bind=engine)
 
 

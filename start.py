@@ -14,6 +14,11 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Set consistent database path
+DB_PATH = os.path.abspath('database/tiktok.db')
+os.environ['DATABASE_URL'] = f'sqlite:///{DB_PATH}'
+os.environ['DATABASE_PATH'] = DB_PATH
+
 def setup_directories():
     """Create all required directories with proper permissions"""
     dirs = [
@@ -22,23 +27,24 @@ def setup_directories():
         'processing', 
         'posted', 
         'logs', 
-        'database',  # Critical for SQLite
+        'database',
         'assets/watermarks', 
         'assets/logos'
     ]
     for dir_name in dirs:
         dir_path = Path(dir_name)
         dir_path.mkdir(parents=True, exist_ok=True)
-        # Ensure write permissions
         os.chmod(str(dir_path), 0o755)
         logger.info(f"✅ Created/verified directory: {dir_name}")
     
-    # Special handling for database file
-    db_path = Path('database/tiktok.db')
-    if not db_path.exists():
-        db_path.touch()  # Create empty file
-        os.chmod(str(db_path), 0o666)  # Read/write for all
-        logger.info("✅ Created database file with proper permissions")
+    # Create database file with absolute path
+    db_dir = os.path.dirname(DB_PATH)
+    os.makedirs(db_dir, exist_ok=True)
+    
+    if not os.path.exists(DB_PATH):
+        Path(DB_PATH).touch()
+        os.chmod(DB_PATH, 0o666)
+        logger.info(f"✅ Created database file at: {DB_PATH}")
     
     logger.info("✅ All directories and files ready")
 
@@ -61,38 +67,22 @@ def test_database_access():
     """Test if we can access the database"""
     try:
         import sqlite3
-        # Try different paths
-        paths_to_try = [
-            'database/tiktok.db',
-            '/app/database/tiktok.db',
-            '/tmp/tiktok.db'
-        ]
         
-        for db_path in paths_to_try:
-            try:
-                # Ensure directory exists
-                os.makedirs(os.path.dirname(db_path), exist_ok=True)
-                
-                # Try to connect
-                conn = sqlite3.connect(db_path)
-                conn.execute('SELECT 1')
-                conn.close()
-                
-                logger.info(f"✅ Database accessible at: {db_path}")
-                
-                # Set environment variable for the app
-                os.environ['DATABASE_PATH'] = db_path
-                return True
-                
-            except Exception as e:
-                logger.warning(f"Cannot access database at {db_path}: {e}")
-                continue
+        # Use the global DB_PATH
+        conn = sqlite3.connect(DB_PATH)
+        conn.execute('SELECT 1')
+        conn.close()
         
-        logger.error("❌ No writable database location found")
-        return False
+        logger.info(f"✅ Database accessible at: {DB_PATH}")
         
-    except ImportError:
-        logger.error("❌ SQLite3 module not available")
+        # Set both environment variables
+        os.environ['DATABASE_URL'] = f'sqlite:///{DB_PATH}'
+        os.environ['DATABASE_PATH'] = DB_PATH
+        
+        return True
+        
+    except Exception as e:
+        logger.error(f"❌ Cannot access database at {DB_PATH}: {e}")
         return False
 
 def health_check_loop():
@@ -145,13 +135,14 @@ def main():
         
         # Try to import and run main controller
         logger.info("🤖 Starting main automation system...")
+        logger.info(f"📁 Using database at: {DB_PATH}")
+        logger.info(f"📁 DATABASE_URL: {os.getenv('DATABASE_URL')}")
+        
         try:
-            # First, run migrations with the correct database path
+            # Pass database path explicitly
             from src.database.migrations import run_migrations
-            db_path = os.getenv('DATABASE_PATH', 'database/tiktok.db')
-            run_migrations(db_path)
+            run_migrations(DB_PATH)
             
-            # Then start the main controller
             from src.core.main_wrapper import main as run_automation
             run_automation()
         except ImportError as e:
