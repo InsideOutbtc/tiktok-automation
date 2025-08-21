@@ -20,6 +20,17 @@ def setup_directories():
     for dir_name in dirs:
         Path(dir_name).mkdir(parents=True, exist_ok=True)
     logger.info("✅ All directories created")
+    
+def run_database_migrations():
+    """Run database migrations"""
+    try:
+        from src.database.migrations import run_migrations
+        if run_migrations():
+            logger.info("✅ Database migrations completed")
+        else:
+            logger.warning("⚠️ Database migrations had issues")
+    except Exception as e:
+        logger.error(f"❌ Migration error: {e}")
 
 def check_environment():
     """Check if environment is properly configured"""
@@ -66,6 +77,9 @@ def main():
         
         # Setup environment
         setup_directories()
+        
+        # Run database migrations
+        run_database_migrations()
         
         # Check configuration
         env_ready = check_environment()
