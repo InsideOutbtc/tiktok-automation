@@ -11,11 +11,12 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Copy requirements files
+# Copy requirements files first for better caching
 COPY requirements*.txt ./
 
-# Install Python packages
-RUN pip install --no-cache-dir -r requirements.txt || \
+# Install Python packages with better error handling
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir -r requirements.txt || \
     (echo "📦 Main requirements failed, trying essential..." && \
      test -f requirements_essential.txt && pip install --no-cache-dir -r requirements_essential.txt) || \
     (echo "📦 Installing minimal packages..." && \
@@ -31,23 +32,31 @@ RUN pip install --no-cache-dir -r requirements.txt || \
          tenacity \
          aiohttp)
 
-# Copy application
+# Copy application files
 COPY . .
 
-# Fix Python path - CRITICAL for module imports
+# CRITICAL: Ensure all __init__.py files exist and have proper permissions
+RUN find /app -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true && \
+    touch /app/src/__init__.py && \
+    touch /app/src/database/__init__.py && \
+    touch /app/src/core/__init__.py && \
+    touch /app/src/agents/__init__.py && \
+    touch /app/src/utils/__init__.py && \
+    touch /app/src/api/__init__.py && \
+    touch /app/src/mcp/__init__.py && \
+    chmod 644 /app/src/__init__.py /app/src/*/__init__.py
+
+# Fix Python path - add both /app and /app/src
 ENV PYTHONPATH=/app:/app/src:$PYTHONPATH
 ENV PYTHONUNBUFFERED=1
-
-# Ensure all __init__.py files exist
-RUN find /app/src -type d -exec touch {}/__init__.py \;
 
 # Create directories with proper permissions
 RUN mkdir -p /app/database /app/input /app/output /app/processing /app/posted /app/logs /app/assets/watermarks /app/assets/logos && \
     chmod -R 755 /app && \
     chmod 777 /app/database
 
-# Use /tmp for database if /app/database not writable
-ENV DATABASE_PATH=/tmp/tiktok.db
+# Set database path environment variable
+ENV DATABASE_PATH=/app/database/tiktok.db
 
 # Create non-root user but give write permissions
 RUN useradd -m powerpro && \
@@ -55,11 +64,14 @@ RUN useradd -m powerpro && \
     chmod -R 755 /app && \
     chmod 777 /app/database /tmp
 
+# Add debug script
+COPY docker_debug_imports.py /app/
+
 USER powerpro
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD python -c "print('Health check passed'); exit(0)"
 
-# Use the safe wrapper that handles import failures gracefully
-CMD ["python", "start_safe.py"]
+# Use the safe wrapper
+CMD ["python", "start.py"]

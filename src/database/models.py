@@ -78,6 +78,9 @@ class Clip(Base):
     id = Column(Integer, primary_key=True, index=True)
     video_id = Column(Integer, ForeignKey("videos.id"))
     path = Column(String)
+    title = Column(String, nullable=True)
+    description = Column(String, nullable=True)
+    hashtags = Column(JSON, nullable=True)
     start_time = Column(Float)
     end_time = Column(Float)
     duration = Column(Float)
@@ -212,3 +215,100 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def get_session():
+    """Get a new database session"""
+    return SessionLocal()
+
+
+# Add to_dict methods to models
+def add_to_dict_methods():
+    """Add to_dict methods to all models"""
+    
+    def video_to_dict(self):
+        return {
+            "id": self.id,
+            "platform": self.platform,
+            "platform_id": self.platform_id,
+            "url": self.url,
+            "title": self.title,
+            "author": self.author,
+            "engagement_score": self.engagement_score,
+            "viral_score": self.viral_score,
+            "metadata": self.video_metadata,
+            "processed": self.processed,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "processed_at": self.processed_at.isoformat() if self.processed_at else None
+        }
+    
+    def clip_to_dict(self):
+        return {
+            "id": self.id,
+            "video_id": self.video_id,
+            "path": self.path,
+            "title": self.title,
+            "description": self.description,
+            "hashtags": self.hashtags,
+            "start_time": self.start_time,
+            "end_time": self.end_time,
+            "duration": self.duration,
+            "score": self.score,
+            "metadata": self.clip_metadata,
+            "effects_applied": self.effects_applied,
+            "hook_data": self.hook_data,
+            "prediction": self.prediction,
+            "posted": self.posted,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "posted_at": self.posted_at.isoformat() if self.posted_at else None
+        }
+    
+    def publication_to_dict(self):
+        return {
+            "id": self.id,
+            "clip_id": self.clip_id,
+            "platform": self.platform,
+            "platform_post_id": self.platform_post_id,
+            "views": self.views,
+            "likes": self.likes,
+            "shares": self.shares,
+            "comments": self.comments,
+            "engagement_rate": self.engagement_rate,
+            "published_at": self.published_at.isoformat() if self.published_at else None,
+            "last_update": self.last_update.isoformat() if self.last_update else None
+        }
+    
+    def pattern_to_dict(self):
+        return {
+            "id": self.id,
+            "pattern_type": self.pattern_type,
+            "pattern_data": self.pattern_data,
+            "confidence": self.confidence,
+            "usage_count": self.usage_count,
+            "success_rate": self.success_rate,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "last_used": self.last_used.isoformat() if self.last_used else None
+        }
+    
+    def task_to_dict(self):
+        return {
+            "id": self.id,
+            "task_type": self.task_type,
+            "status": self.status,
+            "input_data": self.input_data,
+            "result_data": self.result_data,
+            "error_message": self.error_message,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "completed_at": self.completed_at.isoformat() if self.completed_at else None
+        }
+    
+    # Add methods to classes
+    Video.to_dict = video_to_dict
+    Clip.to_dict = clip_to_dict
+    Publication.to_dict = publication_to_dict
+    Pattern.to_dict = pattern_to_dict
+    Task.to_dict = task_to_dict
+
+
+# Apply to_dict methods
+add_to_dict_methods()

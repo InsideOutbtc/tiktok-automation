@@ -134,3 +134,58 @@ class QueryCache:
 
 # Global cache instance
 query_cache = QueryCache()
+
+
+class DatabaseQueries:
+    """Database interface for main controller"""
+    
+    def __init__(self):
+        self.queries = OptimizedQueries()
+        self._session = None
+    
+    @property
+    def session(self):
+        """Get or create database session"""
+        if self._session is None:
+            from src.database.models import get_session
+            self._session = get_session()
+        return self._session
+    
+    async def create_clip(self, clip_data: Dict[str, Any]):
+        """Create a new clip record"""
+        from src.database.models import Clip
+        
+        # Extract metadata if it's passed as a separate field
+        metadata = clip_data.pop('metadata', {})
+        if metadata and 'clip_metadata' not in clip_data:
+            clip_data['clip_metadata'] = metadata
+        
+        clip = Clip(**clip_data)
+        self.session.add(clip)
+        self.session.commit()
+        return clip
+    
+    async def get_unpublished_clips(self, limit: int = 10) -> List[Dict[str, Any]]:
+        """Get clips that haven't been published yet"""
+        clips = self.queries.get_publishable_clips(self.session, min_score=0.7)
+        return [clip.to_dict() for clip in clips[:limit]]
+    
+    async def update_clip(self, clip_id: int, updates: Dict[str, Any]):
+        """Update a clip by ID"""
+        from src.database.models import Clip
+        
+        self.session.query(Clip).filter(Clip.id == clip_id).update(updates)
+        self.session.commit()
+    
+    async def get_performance_data(self, days: int = 7) -> List[Dict[str, Any]]:
+        """Get performance data for pattern analysis"""
+        from datetime import datetime, timedelta
+        from src.database.models import Publication
+        
+        since = datetime.utcnow() - timedelta(days=days)
+        
+        publications = self.session.query(Publication)\
+            .filter(Publication.published_at > since)\
+            .all()
+        
+        return [pub.to_dict() for pub in publications]
