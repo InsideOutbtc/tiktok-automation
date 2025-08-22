@@ -15,13 +15,13 @@ logger = logging.getLogger(__name__)
 
 class HookWriterAgent:
     """AI agent that writes engaging hooks and metadata for clips"""
-    
+
     def __init__(self):
         self.name = "HookWriter"
         self.hook_templates = []
         self.hashtag_database = []
         self.emoji_bank = ["💪", "🔥", "⚡", "🎯", "💯", "🚀", "⭐", "✨"]
-        
+
         # OpenAI integration v1.0+
         self.openai_api_key = os.getenv("OPENAI_API_KEY")
         if self.openai_api_key:
@@ -30,18 +30,18 @@ class HookWriterAgent:
                 self.enabled = True
                 logger.info("✅ HookWriter: OpenAI v1.0+ initialized")
             except Exception as e:
-                logger.warning(f"OpenAI init failed: {e}, using templates")
+                logger.warning("OpenAI init failed: %s, using templates" % e)
                 self.client = None
                 self.enabled = False
         else:
             logger.info("HookWriter: Using template-based generation (no OpenAI key)")
             self.client = None
             self.enabled = False
-            
+
     async def initialize(self):
         """Initialize the hook writer agent"""
         logger.info("Initializing Hook Writer Agent")
-        
+
         # Load hook templates for fallback
         self.hook_templates = [
             "This {adjective} transformation will {action} you {emoji}",
@@ -52,7 +52,7 @@ class HookWriterAgent:
             "{emoji} Watch till the end for the {adjective} results",
             "Stop scrolling if you want to {goal} {emoji}"
         ]
-        
+
         # Load trending hashtags
         self.hashtag_database = [
             "#fitness", "#workout", "#transformation", "#gym", "#fitnessmotivation",
@@ -60,16 +60,16 @@ class HookWriterAgent:
             "#fitnessjourney", "#gymmotivation", "#fitnessgoals", "#weightloss",
             "#nutrition", "#exercise", "#healthylifestyle", "#fitnessaddict"
         ]
-        
+
         return True
-        
+
     async def generate_metadata(self, clip: Dict[str, Any]) -> Dict[str, Any]:
         """Generate complete metadata for a clip"""
         if self.enabled and self.client:
             return await self._generate_with_ai(clip)
         else:
             return await self._generate_with_templates(clip)
-            
+
     async def _generate_with_ai(self, clip: Dict[str, Any]) -> Dict[str, Any]:
         """Generate metadata using OpenAI"""
         try:
@@ -81,7 +81,7 @@ class HookWriterAgent:
             Original Title: {clip.get('original_title', '')[:100]}
             Viral Score: {clip.get('viral_score', 0.8):.1f}
             """
-            
+
             prompt = f"""You are a viral content expert. Create engaging metadata for this fitness video:
 
 {context}
@@ -105,10 +105,10 @@ Format each section clearly."""
                 max_tokens=300,
                 temperature=0.8
             )
-            
+
             # Parse AI response - v1.0+ format
             ai_output = response.choices[0].message.content
-            
+
             metadata = {
                 "title": self._extract_section(ai_output, "TITLE", self._generate_title_fallback(clip)),
                 "hook_text": self._extract_section(ai_output, "HOOK", "WATCH THIS"),
@@ -117,17 +117,17 @@ Format each section clearly."""
                 "call_to_action": self._extract_section(ai_output, "CTA", "Follow for more! 💪"),
                 "generated_by": "ai"
             }
-            
+
             # Add emojis to title if missing
             if not any(emoji in metadata["title"] for emoji in self.emoji_bank):
                 metadata["title"] += f" {random.choice(self.emoji_bank)}"
-                
+
             return metadata
-            
+
         except Exception as e:
             logger.error(f"OpenAI metadata generation error: {e}")
             return await self._generate_with_templates(clip)
-            
+
     def _extract_section(self, text: str, section: str, default: str) -> str:
         """Extract a section from AI response"""
         try:
@@ -145,7 +145,7 @@ Format each section clearly."""
             return default
         except:
             return default
-            
+
     def _extract_hashtags(self, text: str) -> List[str]:
         """Extract hashtags from AI response"""
         try:
@@ -156,13 +156,13 @@ Format each section clearly."""
                 hashtags = re.findall(r'#\w+', hashtag_line)
                 if len(hashtags) >= 5:
                     return hashtags[:15]  # Max 15 hashtags
-                    
+
         except:
             pass
-            
+
         # Fallback to database
         return random.sample(self.hashtag_database[:10], 5) + random.sample(self.hashtag_database[10:], 5)
-        
+
     async def _generate_with_templates(self, clip: Dict[str, Any]) -> Dict[str, Any]:
         """Fallback template-based generation"""
         return {
@@ -173,7 +173,7 @@ Format each section clearly."""
             "call_to_action": await self._generate_cta_fallback(clip),
             "generated_by": "templates"
         }
-        
+
     def _generate_title_fallback(self, clip: Dict[str, Any]) -> str:
         """Generate title using templates"""
         templates = [
@@ -183,12 +183,12 @@ Format each section clearly."""
             f"{random.choice(['Secret', 'Hidden', 'Unknown'])} Technique Pros Use",
             f"From {random.choice(['Beginner', 'Zero', 'Couch'])} to {random.choice(['Hero', 'Pro', 'Beast'])}"
         ]
-        
+
         title = random.choice(templates)
         emoji = random.choice(self.emoji_bank)
-        
+
         return f"{title} {emoji}"
-        
+
     def _generate_description_fallback(self, clip: Dict[str, Any]) -> str:
         """Generate description using templates"""
         intros = [
@@ -198,7 +198,7 @@ Format each section clearly."""
             "You won't believe what happened when I tried this.",
             "The transformation speaks for itself!"
         ]
-        
+
         tips = [
             "Save this for your next workout",
             "Follow for more fitness tips",
@@ -206,23 +206,23 @@ Format each section clearly."""
             "Comment your goals below",
             "Share with someone who needs to see this"
         ]
-        
+
         return f"{intros[random.randrange(len(intros))]}\n\n{tips[random.randrange(len(tips))]}"
-        
+
     async def _generate_hashtags_fallback(self, clip: Dict[str, Any]) -> List[str]:
         """Generate hashtags using database"""
         # Mix of popular and niche hashtags
         popular = random.sample(self.hashtag_database[:10], 5)
         niche = random.sample(self.hashtag_database[10:], 5)
-        
+
         # Add clip-specific hashtags
         if clip.get("type") == "energy_peak":
             niche.append("#intenseworkout")
         elif clip.get("type") == "transformation":
             niche.append("#beforeandafter")
-            
+
         return popular + niche
-        
+
     async def _generate_hook_text_fallback(self, clip: Dict[str, Any]) -> str:
         """Generate hook text using templates"""
         hooks = [
@@ -232,9 +232,9 @@ Format each section clearly."""
             "IMPOSSIBLE? WATCH THIS",
             "THE RESULTS? INSANE."
         ]
-        
+
         return random.choice(hooks)
-        
+
     async def _generate_cta_fallback(self, clip: Dict[str, Any]) -> str:
         """Generate call-to-action using templates"""
         ctas = [
@@ -244,20 +244,20 @@ Format each section clearly."""
             "Drop a ❤️ if this motivated you!",
             "What's your fitness goal? Comment below! 💬"
         ]
-        
+
         return random.choice(ctas)
-        
+
     async def optimize_for_platform(self, metadata: Dict[str, Any], platform: str) -> Dict[str, Any]:
         """Optimize metadata for specific platform"""
         if platform == "tiktok":
             # TikTok specific optimizations
             metadata["title"] = metadata["title"][:100]  # TikTok limit
             metadata["hashtags"] = metadata["hashtags"][:30]  # Max hashtags
-            
+
         elif platform == "youtube":
             # YouTube specific optimizations
             metadata["title"] = metadata["title"][:60]  # YouTube limit
             # Add YouTube-specific tags
             metadata["tags"] = [tag.replace("#", "") for tag in metadata["hashtags"]]
-            
+
         return metadata
