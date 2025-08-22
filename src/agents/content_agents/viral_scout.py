@@ -6,7 +6,7 @@ import asyncio
 from typing import Dict, List, Any, Optional
 import logging
 from dotenv import load_dotenv
-import openai
+from openai import OpenAI
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -20,13 +20,21 @@ class ViralScoutAgent:
         self.viral_patterns = []
         self.min_viral_score = 0.7
         
-        # OpenAI integration
+        # OpenAI integration v1.0+
         self.openai_api_key = os.getenv("OPENAI_API_KEY")
         if self.openai_api_key:
-            openai.api_key = self.openai_api_key
-            logger.info("ViralScout: OpenAI integration enabled")
+            try:
+                self.client = OpenAI(api_key=self.openai_api_key)
+                self.enabled = True
+                logger.info("✅ ViralScout: OpenAI v1.0+ initialized")
+            except Exception as e:
+                logger.warning(f"OpenAI init failed: {e}, using rule-based")
+                self.client = None
+                self.enabled = False
         else:
             logger.info("ViralScout: Using rule-based analysis (no OpenAI key)")
+            self.client = None
+            self.enabled = False
             
     async def initialize(self):
         """Initialize the viral scout agent"""
@@ -43,7 +51,7 @@ class ViralScoutAgent:
         
     async def analyze(self, content: Dict[str, Any]) -> Dict[str, Any]:
         """Analyze content for viral potential using AI or rules"""
-        if self.openai_api_key:
+        if self.enabled and self.client:
             return await self.analyze_with_ai(content)
         else:
             return self._rule_based_analysis(content)
@@ -78,7 +86,8 @@ Provide:
 
 Format: SCORE: X.XX | FACTOR: factor_name | REASON: explanation"""
 
-            response = await openai.ChatCompletion.acreate(
+            # OpenAI v1.0+ API call
+            response = self.client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": "You are an expert at predicting viral fitness content."},
@@ -214,7 +223,7 @@ Format: SCORE: X.XX | FACTOR: factor_name | REASON: explanation"""
         
     async def predict_performance(self, content: Dict[str, Any]) -> Dict[str, Any]:
         """Predict future performance using AI"""
-        if not self.openai_api_key:
+        if not self.enabled or not self.client:
             return {
                 "predicted_views": content.get("views", 0) * 2,
                 "confidence": 0.5,
@@ -233,7 +242,8 @@ Age: New
 Provide predicted views and confidence (0-1).
 Format: VIEWS: number | CONFIDENCE: X.XX"""
 
-            response = await openai.ChatCompletion.acreate(
+            # OpenAI v1.0+ API call
+            response = self.client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[{"role": "user", "content": prompt}],
                 max_tokens=50,

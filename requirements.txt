@@ -12,11 +12,12 @@ aiofiles==23.2.1
 google-api-python-client==2.108.0
 google-auth-httplib2==0.1.1
 google-auth-oauthlib==1.1.0
-openai==1.6.1
-TikTokApi==6.2.0
+openai==1.35.0  # Updated from 0.x to latest v1.0+
+TikTokApi==6.3.0  # Latest async version
+tiktoken==0.7.0  # For OpenAI token counting
 
 # Video processing
-yt-dlp==2023.12.30
+yt-dlp==2024.8.6  # Latest for better YouTube support
 opencv-python-headless==4.9.0.80
 ffmpeg-python==0.2.0
 Pillow==10.2.0

@@ -7,7 +7,7 @@ from typing import Dict, List, Any
 import logging
 import random
 from dotenv import load_dotenv
-import openai
+from openai import OpenAI
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -22,13 +22,21 @@ class HookWriterAgent:
         self.hashtag_database = []
         self.emoji_bank = ["💪", "🔥", "⚡", "🎯", "💯", "🚀", "⭐", "✨"]
         
-        # OpenAI integration
+        # OpenAI integration v1.0+
         self.openai_api_key = os.getenv("OPENAI_API_KEY")
         if self.openai_api_key:
-            openai.api_key = self.openai_api_key
-            logger.info("HookWriter: OpenAI integration enabled")
+            try:
+                self.client = OpenAI(api_key=self.openai_api_key)
+                self.enabled = True
+                logger.info("✅ HookWriter: OpenAI v1.0+ initialized")
+            except Exception as e:
+                logger.warning(f"OpenAI init failed: {e}, using templates")
+                self.client = None
+                self.enabled = False
         else:
             logger.info("HookWriter: Using template-based generation (no OpenAI key)")
+            self.client = None
+            self.enabled = False
             
     async def initialize(self):
         """Initialize the hook writer agent"""
@@ -57,7 +65,7 @@ class HookWriterAgent:
         
     async def generate_metadata(self, clip: Dict[str, Any]) -> Dict[str, Any]:
         """Generate complete metadata for a clip"""
-        if self.openai_api_key:
+        if self.enabled and self.client:
             return await self._generate_with_ai(clip)
         else:
             return await self._generate_with_templates(clip)
@@ -87,7 +95,8 @@ Generate:
 
 Format each section clearly."""
 
-            response = await openai.ChatCompletion.acreate(
+            # OpenAI v1.0+ API call
+            response = self.client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": "You are an expert at creating viral fitness content."},
@@ -97,7 +106,7 @@ Format each section clearly."""
                 temperature=0.8
             )
             
-            # Parse AI response
+            # Parse AI response - v1.0+ format
             ai_output = response.choices[0].message.content
             
             metadata = {
