@@ -14,6 +14,13 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Log version info on startup
+try:
+    from src.utils.version import print_version
+    print_version()
+except:
+    logger.info("Version info not available")
+
 # Fix Python path BEFORE any imports
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
