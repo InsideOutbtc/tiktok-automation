@@ -5,7 +5,7 @@ Simplified implementation to avoid timeouts
 
 import asyncio
 from enum import Enum
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from datetime import datetime
 import logging
 
@@ -26,6 +26,13 @@ class ErrorHandler:
     def __init__(self):
         self.error_stats = {"tier1": 0, "tier2": 0, "tier3": 0, "tier4": 0}
         self.recovered = {"tier1": 0, "tier2": 0, "tier3": 0, "tier4": 0}
+        # Mapping from enum values to stat keys
+        self._tier_map = {
+            "transient": "tier1",
+            "processing": "tier2", 
+            "system": "tier3",
+            "critical": "tier4"
+        }
         
     async def handle(
         self,
@@ -38,7 +45,10 @@ class ErrorHandler:
             tier = self._classify_error(error)
             
         logger.error(f"Error: {error}", extra={"tier": tier.value, "context": context})
-        self.error_stats[tier.value] += 1
+        
+        # Update error stats with proper mapping
+        stat_key = self._tier_map.get(tier.value, "tier3")  # Default to tier3 if unknown
+        self.error_stats[stat_key] += 1
         
         try:
             if tier == ErrorTier.TIER1:
@@ -50,7 +60,9 @@ class ErrorHandler:
             else:
                 result = await self._handle_tier4(error, context)
                 
-            self.recovered[tier.value] += 1
+            # Update recovered stats with proper mapping
+            stat_key = self._tier_map.get(tier.value, "tier3")
+            self.recovered[stat_key] += 1
             return result
             
         except Exception as e:

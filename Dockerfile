@@ -34,9 +34,14 @@ RUN pip install --no-cache-dir -r requirements.txt || \
 # Copy application
 COPY . .
 
+# Remove any cached Python files that might have been copied
+RUN find /app -type f -name "*.pyc" -delete && \
+    find /app -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+
 # Fix Python path - CRITICAL for module imports
 ENV PYTHONPATH=/app:/app/src:$PYTHONPATH
 ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 
 # Ensure all __init__.py files exist
 RUN find /app/src -type d -exec touch {}/__init__.py \;
