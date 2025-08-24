@@ -187,30 +187,33 @@ class ContentSourcer:
                         tag = api.hashtag(name=keyword)
                         
                         async for video in tag.videos(count=10):
-                        video_data = {
-                            "platform": "tiktok",
-                            "id": video.id,
-                            "title": video.desc,
-                            "author": video.author.username,
-                            "author_id": video.author.id,
-                            "url": f"https://www.tiktok.com/@{video.author.username}/video/{video.id}",
-                            "music": video.sound.title if video.sound else "Unknown",
-                            "duration": video.video.duration,
-                            "views": video.stats.play_count,
-                            "likes": video.stats.digg_count,
-                            "shares": video.stats.share_count,
-                            "comments": video.stats.comment_count,
-                            "engagement_score": self._calculate_tiktok_engagement({
-                                'playCount': video.stats.play_count,
-                                'diggCount': video.stats.digg_count,
-                                'shareCount': video.stats.share_count,
-                                'commentCount': video.stats.comment_count
-                            }),
-                            "download_status": "pending",
-                            "keywords": [keyword],
-                            "discovered_at": datetime.utcnow().isoformat()
-                        }
-                        content.append(video_data)
+                            video_data = {
+                                "platform": "tiktok",
+                                "id": video.id,
+                                "title": video.desc,
+                                "author": video.author.username,
+                                "author_id": video.author.id,
+                                "url": f"https://www.tiktok.com/@{video.author.username}/video/{video.id}",
+                                "music": video.sound.title if video.sound else "Unknown",
+                                "duration": video.video.duration,
+                                "views": video.stats.play_count,
+                                "likes": video.stats.digg_count,
+                                "shares": video.stats.share_count,
+                                "comments": video.stats.comment_count,
+                                "engagement_score": self._calculate_tiktok_engagement({
+                                    'playCount': video.stats.play_count,
+                                    'diggCount': video.stats.digg_count,
+                                    'shareCount': video.stats.share_count,
+                                    'commentCount': video.stats.comment_count
+                                }),
+                                "download_status": "pending",
+                                "keywords": [keyword],
+                                "discovered_at": datetime.utcnow().isoformat()
+                            }
+                            content.append(video_data)
+                    except Exception as e:
+                        logger.warning(f"Error processing keyword {keyword}: {e}")
+                        continue
                         
         except AttributeError as e:
             # Tier 3: Use mock data for attribute errors
