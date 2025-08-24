@@ -14,12 +14,15 @@ WORKDIR /app
 # Copy requirements files
 COPY requirements*.txt ./
 
-# Install Python packages
+# Install Python packages with better error handling
 RUN pip install --no-cache-dir -r requirements.txt || \
     (echo "📦 Main requirements failed, trying essential..." && \
      test -f requirements_essential.txt && pip install --no-cache-dir -r requirements_essential.txt) || \
     (echo "📦 Installing minimal packages..." && \
      pip install --no-cache-dir \
+         google-api-python-client \
+         google-auth \
+         google-auth-httplib2 \
          yt-dlp \
          openai \
          moviepy \
