@@ -13,8 +13,8 @@ import json
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-# TikTok Free API
-from TikTokApi import TikTokApi
+# TikTok Free API - Disabled temporarily
+# from TikTokApi import TikTokApi
 
 # Video Downloader
 import yt_dlp
@@ -45,7 +45,7 @@ class ContentSourcer:
             
         # Initialize APIs
         self.youtube = build('youtube', 'v3', developerKey=self.youtube_api_key) if self.youtube_api_key else None
-        self.tiktok_api = TikTokApi()
+        # self.tiktok_api = TikTokApi()  # Disabled temporarily
         
         # Configure OpenAI v1.0+
         if self.openai_api_key:
@@ -173,85 +173,90 @@ class ContentSourcer:
         return content
     
     async def _discover_tiktok_free(self, keywords: List[str]) -> List[Dict[str, Any]]:
-        """Discover TikTok with Tier 3 fallback to mock"""
+        """Discover TikTok - temporarily disabled, using mock data"""
         content = []
         
-        try:
-            # Try new API syntax
-            async with TikTokApi() as api:
-                await api.create_sessions(num_sessions=1, sleep_after=3)
-                
-                for keyword in keywords:
-                    try:
-                        # Search by hashtag
-                        tag = api.hashtag(name=keyword)
-                        
-                        async for video in tag.videos(count=10):
-                            video_data = {
-                                "platform": "tiktok",
-                                "id": video.id,
-                                "title": video.desc,
-                                "author": video.author.username,
-                                "author_id": video.author.id,
-                                "url": f"https://www.tiktok.com/@{video.author.username}/video/{video.id}",
-                                "music": video.sound.title if video.sound else "Unknown",
-                                "duration": video.video.duration,
-                                "views": video.stats.play_count,
-                                "likes": video.stats.digg_count,
-                                "shares": video.stats.share_count,
-                                "comments": video.stats.comment_count,
-                                "engagement_score": self._calculate_tiktok_engagement({
-                                    'playCount': video.stats.play_count,
-                                    'diggCount': video.stats.digg_count,
-                                    'shareCount': video.stats.share_count,
-                                    'commentCount': video.stats.comment_count
-                                }),
-                                "download_status": "pending",
-                                "keywords": [keyword],
-                                "discovered_at": datetime.utcnow().isoformat()
-                            }
-                            content.append(video_data)
-                    except Exception as e:
-                        logger.warning(f"Error processing keyword {keyword}: {e}")
-                        continue
-                        
-        except AttributeError as e:
-            # Tier 3: Use mock data for attribute errors
-            logger.warning(f"TikTok API attribute issue: {e}, using mock data")
-            return self._get_mock_tiktok_data(keywords)
-        except Exception as e:
-            logger.error(f"TikTok API error: {e}")
-            # Try trending as fallback
-            try:
-                async with TikTokApi() as api:
-                    await api.create_sessions(num_sessions=1, sleep_after=3)
-                    async for video in api.trending.videos(count=20):
-                        # Check if fitness related
-                        if any(kw in video.desc.lower() for kw in ["fitness", "workout", "gym"]):
-                            video_data = {
-                                "platform": "tiktok",
-                                "id": video.id,
-                                "title": video.desc,
-                                "author": video.author.username,
-                                "url": f"https://www.tiktok.com/@{video.author.username}/video/{video.id}",
-                                "duration": video.video.duration,
-                                "views": video.stats.play_count,
-                                "likes": video.stats.digg_count,
-                                "engagement_score": self._calculate_tiktok_engagement({
-                                    'playCount': video.stats.play_count,
-                                    'diggCount': video.stats.digg_count,
-                                    'shareCount': video.stats.share_count,
-                                    'commentCount': video.stats.comment_count
-                                }),
-                                "download_status": "pending",
-                                "discovered_at": datetime.utcnow().isoformat()
-                            }
-                            content.append(video_data)
-            except:
-                logger.error("TikTok API failed completely, using mock data")
-                return self._get_mock_tiktok_data(keywords)
-                
+        # TikTokApi temporarily disabled - return empty list
+        logger.info("TikTok discovery temporarily disabled - using YouTube only")
         return content
+        
+        # Original code commented out:
+        # try:
+        #     # Try new API syntax
+        #     async with TikTokApi() as api:
+        #         await api.create_sessions(num_sessions=1, sleep_after=3)
+        #         
+        #         for keyword in keywords:
+        #             try:
+        #                 # Search by hashtag
+        #                 tag = api.hashtag(name=keyword)
+        #                 
+        #                 async for video in tag.videos(count=10):
+        #                     video_data = {
+        #                         "platform": "tiktok",
+        #                         "id": video.id,
+        #                         "title": video.desc,
+        #                         "author": video.author.username,
+        #                         "author_id": video.author.id,
+        #                         "url": f"https://www.tiktok.com/@{video.author.username}/video/{video.id}",
+        #                         "music": video.sound.title if video.sound else "Unknown",
+        #                         "duration": video.video.duration,
+        #                         "views": video.stats.play_count,
+        #                         "likes": video.stats.digg_count,
+        #                         "shares": video.stats.share_count,
+        #                         "comments": video.stats.comment_count,
+        #                         "engagement_score": self._calculate_tiktok_engagement({
+        #                             'playCount': video.stats.play_count,
+        #                             'diggCount': video.stats.digg_count,
+        #                             'shareCount': video.stats.share_count,
+        #                             'commentCount': video.stats.comment_count
+        #                         }),
+        #                         "download_status": "pending",
+        #                         "keywords": [keyword],
+        #                         "discovered_at": datetime.utcnow().isoformat()
+        #                     }
+        #                     content.append(video_data)
+        #             except Exception as e:
+        #                 logger.warning(f"Error processing keyword {keyword}: {e}")
+        #                 continue
+                        
+        # except AttributeError as e:
+        #     # Tier 3: Use mock data for attribute errors
+        #     logger.warning(f"TikTok API attribute issue: {e}, using mock data")
+        #     return self._get_mock_tiktok_data(keywords)
+        # except Exception as e:
+        #     logger.error(f"TikTok API error: {e}")
+        #     # Try trending as fallback
+        #     try:
+        #         async with TikTokApi() as api:
+        #             await api.create_sessions(num_sessions=1, sleep_after=3)
+        #             async for video in api.trending.videos(count=20):
+        #                 # Check if fitness related
+        #                 if any(kw in video.desc.lower() for kw in ["fitness", "workout", "gym"]):
+        #                     video_data = {
+        #                         "platform": "tiktok",
+        #                         "id": video.id,
+        #                         "title": video.desc,
+        #                         "author": video.author.username,
+        #                         "url": f"https://www.tiktok.com/@{video.author.username}/video/{video.id}",
+        #                         "duration": video.video.duration,
+        #                         "views": video.stats.play_count,
+        #                         "likes": video.stats.digg_count,
+        #                         "engagement_score": self._calculate_tiktok_engagement({
+        #                             'playCount': video.stats.play_count,
+        #                             'diggCount': video.stats.digg_count,
+        #                             'shareCount': video.stats.share_count,
+        #                             'commentCount': video.stats.comment_count
+        #                         }),
+        #                         "download_status": "pending",
+        #                         "discovered_at": datetime.utcnow().isoformat()
+        #                     }
+        #                     content.append(video_data)
+        #     except:
+        #         logger.error("TikTok API failed completely, using mock data")
+        #         return self._get_mock_tiktok_data(keywords)
+        #         
+        # return content
     
     def _get_mock_tiktok_data(self, keywords: List[str] = None) -> List[Dict[str, Any]]:
         """Tier 3 workaround - mock TikTok data"""
