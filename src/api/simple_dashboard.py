@@ -40,4 +40,6 @@ def health():
     return jsonify({"status": "healthy"})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000)
+    # CRITICAL FIX: Must bind to 0.0.0.0 for Docker/DigitalOcean
+    # NOT 127.0.0.1 or localhost!
+    app.run(host='0.0.0.0', port=8000, debug=False)
