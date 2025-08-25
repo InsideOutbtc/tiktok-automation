@@ -499,6 +499,11 @@ async def main():
     try:
         await controller.initialize()
         
+        # Start web dashboard in background
+        import subprocess
+        subprocess.Popen(['python', 'src/api/simple_dashboard.py'])
+        logger.info("Web dashboard started on port 8000")
+        
         if args.command == "start":
             await controller.start("full")
         elif args.command == "discover":

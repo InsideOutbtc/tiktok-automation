@@ -1,0 +1,136 @@
+{
+  "core_components": {
+    "main_controller": {
+      "exists": true,
+      "lines": 522,
+      "features": {
+        "youtube_api": true,
+        "tiktok_api": false,
+        "openai": false,
+        "async": true,
+        "error_handling": true
+      }
+    },
+    "content_sourcer": {
+      "exists": true,
+      "lines": 479,
+      "features": {
+        "youtube_api": true,
+        "tiktok_api": true,
+        "openai": true,
+        "async": true,
+        "error_handling": true
+      }
+    },
+    "smart_clipper": {
+      "exists": true,
+      "lines": 185,
+      "features": {
+        "youtube_api": false,
+        "tiktok_api": false,
+        "openai": false,
+        "async": true,
+        "error_handling": true
+      }
+    },
+    "video_editor": {
+      "exists": true,
+      "lines": 169,
+      "features": {
+        "youtube_api": false,
+        "tiktok_api": false,
+        "openai": false,
+        "async": true,
+        "error_handling": true
+      }
+    },
+    "error_handler": {
+      "exists": true,
+      "lines": 117,
+      "features": {
+        "youtube_api": false,
+        "tiktok_api": false,
+        "openai": false,
+        "async": true,
+        "error_handling": true
+      }
+    }
+  },
+  "ai_agents": {
+    "viral_scout.py": {
+      "exists": true,
+      "uses_openai": true,
+      "lines": 288
+    },
+    "clip_selector.py": {
+      "exists": true,
+      "uses_openai": false,
+      "lines": 110
+    },
+    "hook_writer.py": {
+      "exists": true,
+      "uses_openai": true,
+      "lines": 263
+    },
+    "engagement_predictor.py": {
+      "exists": true,
+      "uses_openai": false,
+      "lines": 130
+    }
+  },
+  "api_integrations": {
+    "env_keys": {
+      "youtube_api": true,
+      "openai_api": true,
+      "tiktok_cookies": false,
+      "digitalocean": false
+    },
+    "config": {
+      "youtube_channels": true,
+      "posting_schedule": true,
+      "content_mix": true
+    }
+  },
+  "content_strategy": {
+    "trending_discovery": [
+      "models.py",
+      "queries.py",
+      "video_editor.py",
+      "content_sourcer.py",
+      "smart_clipper.py",
+      "main_controller.py",
+      "ai_agent_system.py",
+      "clip_selector.py",
+      "engagement_predictor.py",
+      "hook_writer.py",
+      "viral_scout.py",
+      "ref_integration.py",
+      "rest_api.py",
+      "mcp_server.py"
+    ],
+    "re_edit_logic": [
+      "main_controller_import_fix.py",
+      "video_editor.py",
+      "main_controller.py"
+    ],
+    "content_categories": [
+      "content_sourcer.py",
+      "main_controller.py",
+      "engagement_predictor.py",
+      "hook_writer.py"
+    ]
+  },
+  "database": {},
+  "mcp_integration": {},
+  "missing_features": [
+    "Influencer Monitoring"
+  ],
+  "working_features": [
+    "YouTube Discovery",
+    "AI Processing",
+    "Trending Discovery"
+  ],
+  "broken_features": [
+    "TikTok Integration (TikTokApi issues)"
+  ]
+}
