@@ -5,10 +5,19 @@ Identifies viral moments and creates optimal clips
 
 import asyncio
 from typing import Dict, List, Any, Tuple
-import cv2
-import numpy as np
 from dataclasses import dataclass
 import logging
+
+# Safe cv2 import with fallback
+try:
+    import cv2
+    import numpy as np
+    CV2_AVAILABLE = True
+except ImportError:
+    print("Warning: OpenCV not available, video analysis features disabled")
+    CV2_AVAILABLE = False
+    cv2 = None
+    np = None
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +49,17 @@ class SmartClipper:
     async def analyze_video(self, video_path: str) -> Dict[str, Any]:
         """Analyze video for viral potential and clip opportunities"""
         logger.info(f"Analyzing video: {video_path}")
+        
+        if not CV2_AVAILABLE or cv2 is None:
+            logger.warning("OpenCV not available - returning basic analysis")
+            return {
+                "duration": 60.0,  # Default duration
+                "fps": 30.0,
+                "scene_changes": [],
+                "energy_peaks": [],
+                "hooks": [],
+                "viral_score": 0.5  # Default score
+            }
         
         try:
             # Get video properties
