@@ -24,6 +24,7 @@ class ResilientYouTubeDownloader:
         self.success_count = 0
         self.failure_count = 0
         self.output_dir = '/app/input'
+        self._check_cookie_validity()
         
     def download_video(self, url: str, video_id: str, output_dir: Optional[str] = None) -> Optional[str]:
         """
@@ -36,12 +37,15 @@ class ResilientYouTubeDownloader:
         # Reset strategies for this download
         self.strategies_tried = []
         
+        # CRITICAL: Cookies are the ONLY proven method for cloud servers
+        # Other strategies are mostly for fallback/redundancy
         strategies = [
-            ('cookies', self._download_with_cookies),
-            ('user_agent', self._download_with_user_agent),
-            ('invidious', self._download_with_invidious),
-            ('cobalt', self._download_with_cobalt),
-            ('proxy', self._download_with_proxy),
+            ('cookies', self._download_with_cookies),  # PRIMARY METHOD
+            ('cookies_retry', self._download_with_cookies),  # Try again with cookies
+            ('user_agent', self._download_with_user_agent),  # Fallback 1
+            ('invidious', self._download_with_invidious),  # Fallback 2
+            ('cobalt', self._download_with_cobalt),  # Fallback 3
+            ('proxy', self._download_with_proxy),  # Last resort
         ]
         
         for strategy_name, strategy_func in strategies:
@@ -71,19 +75,27 @@ class ResilientYouTubeDownloader:
         return self._queue_for_manual_download(url, video_id)
     
     def _download_with_cookies(self, url: str, video_id: str) -> Optional[str]:
-        """Strategy 1: Use authenticated cookies"""
+        """Strategy 1: Use authenticated cookies - PROVEN METHOD FOR CLOUD SERVERS"""
         output_path = f'{self.output_dir}/{video_id}.mp4'
+        
+        # Check if cookies exist, if not, log critical warning
+        if not os.path.exists(self.cookie_file):
+            logger.critical(f"COOKIES FILE NOT FOUND at {self.cookie_file}")
+            logger.critical("Cookies are REQUIRED for cloud server downloads!")
+            logger.critical("Run: python scripts/extract_cookies.py")
+            return None
         
         ydl_opts = {
             'format': 'best[height<=1080]/bestvideo[height<=1080]+bestaudio/best',
             'outtmpl': output_path,
-            'quiet': True,
-            'no_warnings': True,
+            'quiet': False,  # Show output for debugging
+            'no_warnings': False,
             'extract_flat': False,
             'socket_timeout': 30,
-            'retries': 3,
-            'fragment_retries': 3,
-            'ignoreerrors': True,
+            'retries': 5,  # More retries
+            'fragment_retries': 5,
+            'ignoreerrors': False,  # Don't ignore errors
+            'cookiefile': self.cookie_file,  # Always use cookies
             'http_headers': {
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                 'Accept-Language': 'en-US,en;q=0.9',
@@ -91,27 +103,54 @@ class ResilientYouTubeDownloader:
                 'Accept-Encoding': 'gzip, deflate, br',
                 'DNT': '1',
                 'Connection': 'keep-alive',
-                'Upgrade-Insecure-Requests': '1'
-            }
+                'Upgrade-Insecure-Requests': '1',
+                'Sec-Fetch-Dest': 'document',
+                'Sec-Fetch-Mode': 'navigate',
+                'Sec-Fetch-Site': 'none',
+                'Sec-Fetch-User': '?1',
+                'Cache-Control': 'max-age=0'
+            },
+            # Additional options for better cookie handling
+            'cookiesfrombrowser': None,  # Don't try browser extraction
+            'geo_bypass': True,
+            'geo_bypass_country': 'US',
+            # Slow down to appear more human
+            'sleep_interval': random.uniform(5, 10),
+            'max_sleep_interval': 15,
+            'sleep_interval_requests': 1,
+            'sleep_interval_subtitles': 1,
+            'ratelimit': 100000,  # 100KB/s - slower for safety
+            # Additional safety options
+            'age_limit': None,
+            'download_archive': None,
+            'break_on_existing': False,
+            'break_on_reject': False,
+            'skip_playlist_after_errors': 3,
+            'concurrent_fragment_downloads': 1,
+            # Progress hooks for monitoring
+            'progress_hooks': [self._download_progress_hook],
         }
         
-        # Add cookies if available
-        if os.path.exists(self.cookie_file):
-            ydl_opts['cookiefile'] = self.cookie_file
-            logger.info(f"Using cookies from {self.cookie_file}")
+        logger.info(f"Using authenticated cookies from {self.cookie_file}")
+        logger.info("This is the ONLY proven method for cloud server downloads")
         
-        # Rate limiting to appear human
-        ydl_opts['sleep_interval'] = random.uniform(3, 6)
-        ydl_opts['max_sleep_interval'] = 10
-        ydl_opts['ratelimit'] = 150000  # 150KB/s
-        
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(url, download=True)
-            
-        # Check if file was created
-        if os.path.exists(output_path):
-            return output_path
-        return None
+        try:
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(url, download=True)
+                
+            # Verify file was created and has content
+            if os.path.exists(output_path) and os.path.getsize(output_path) > 1000:
+                logger.info(f"SUCCESS: Downloaded {os.path.getsize(output_path)/1024/1024:.1f}MB")
+                return output_path
+            else:
+                logger.error("Download failed or file too small")
+                return None
+                
+        except yt_dlp.utils.DownloadError as e:
+            if "Sign in to confirm you're not a bot" in str(e):
+                logger.error("BOT DETECTION: Cookies may be expired or invalid!")
+                logger.error("Solution: Run python scripts/extract_cookies.py")
+            raise
     
     def _download_with_user_agent(self, url: str, video_id: str) -> Optional[str]:
         """Strategy 2: Rotate user agents and headers"""
@@ -287,6 +326,45 @@ class ResilientYouTubeDownloader:
         if os.path.exists(output_path):
             return output_path
         return None
+    
+    def _download_progress_hook(self, d):
+        """Progress hook to monitor download status"""
+        if d['status'] == 'downloading':
+            percent = d.get('_percent_str', 'N/A')
+            speed = d.get('_speed_str', 'N/A')
+            eta = d.get('_eta_str', 'N/A')
+            logger.info(f"Downloading: {percent} at {speed} ETA: {eta}")
+        elif d['status'] == 'finished':
+            logger.info("Download completed, processing...")
+    
+    def _check_cookie_validity(self):
+        """Check if cookies exist and are valid"""
+        if not os.path.exists(self.cookie_file):
+            logger.critical("="*60)
+            logger.critical("CRITICAL: NO YOUTUBE COOKIES FOUND!")
+            logger.critical("="*60)
+            logger.critical("")
+            logger.critical("Cookies are REQUIRED for cloud server downloads!")
+            logger.critical("All other methods WILL FAIL from datacenter IPs!")
+            logger.critical("")
+            logger.critical("To fix this:")
+            logger.critical("1. Run: python scripts/extract_cookies.py")
+            logger.critical("2. Or manually export cookies from browser")
+            logger.critical("3. Save to: /app/config/youtube_cookies.txt")
+            logger.critical("")
+            logger.critical("="*60)
+            return False
+        
+        # Check if cookies are recent (less than 30 days old)
+        cookie_age = time.time() - os.path.getmtime(self.cookie_file)
+        days_old = cookie_age / (24 * 3600)
+        
+        if days_old > 25:
+            logger.warning(f"COOKIES ARE {days_old:.0f} DAYS OLD - May expire soon!")
+            logger.warning("Consider refreshing: python scripts/extract_cookies.py")
+        
+        logger.info(f"✓ Cookies found: {self.cookie_file} ({days_old:.1f} days old)")
+        return True
     
     def _queue_for_manual_download(self, url: str, video_id: str) -> Optional[str]:
         """Tier 3 Workaround: Queue for manual download"""

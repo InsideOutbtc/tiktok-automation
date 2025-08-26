@@ -6,6 +6,15 @@ A fully autonomous TikTok content creation system powered by Constitutional AI p
 
 ## 🚀 Quick Start
 
+### 🚨 CRITICAL: YouTube Cookie Setup (Required for Cloud)
+```bash
+# YouTube blocks all cloud server downloads without cookies!
+# Run this FIRST on your local computer:
+python scripts/extract_cookies.py
+
+# See YOUTUBE_COOKIES_CRITICAL.md for details
+```
+
 ### Traditional Setup
 ```bash
 # 1. Clone and setup
@@ -16,7 +25,10 @@ cd ~/Patrick/Fitness\ TikTok
 cp .env.example .env
 # Edit .env with your API keys
 
-# 3. Run with Maximum Velocity
+# 3. Setup YouTube cookies (REQUIRED!)
+python scripts/extract_cookies.py
+
+# 4. Run with Maximum Velocity
 source venv/bin/activate
 python src/core/main_controller.py start --max-velocity
 ```

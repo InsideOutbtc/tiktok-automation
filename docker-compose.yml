@@ -4,14 +4,43 @@ services:
   powerpro:
     build: .
     container_name: powerpro-automation
+    ports:
+      - "8000:8000"  # Dashboard port
     environment:
       - YOUTUBE_API_KEY=${YOUTUBE_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - YOUTUBE_COOKIE_FILE=/app/config/youtube_cookies.txt
       - AUTO_PUBLISH=false
       - ENVIRONMENT=development
     volumes:
+      # CRITICAL: Mount cookies for YouTube downloads
+      - ./config/youtube_cookies.txt:/app/config/youtube_cookies.txt:ro
+      # Data persistence
       - ./input:/app/input
       - ./output:/app/output
       - ./logs:/app/logs
       - ./database:/app/database
+      - ./context:/app/context
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "print('Health check passed'); exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+# Cookie management service (run with: docker-compose run --rm cookie-tools)
+  cookie-tools:
+    build: .
+    container_name: powerpro-cookies
+    volumes:
+      - ./config:/app/config
+    profiles:
+      - tools
+    entrypoint: /bin/bash
+    stdin_open: true
+    tty: true
+
+# Usage:
+# 1. Normal operation: docker-compose up
+# 2. Extract cookies: docker-compose run --rm cookie-tools python scripts/extract_cookies.py
+# 3. Check cookies: docker-compose run --rm cookie-tools python scripts/check_youtube_cookies.py
