@@ -18,12 +18,14 @@ from googleapiclient.errors import HttpError
 
 # Video Downloader
 import yt_dlp
+import time
 
 # OpenAI for content analysis
 from openai import OpenAI
 
 # Core imports
 from src.core.error_handler import ErrorHandler, ErrorTier
+from src.core.youtube_downloader import ResilientYouTubeDownloader
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -46,6 +48,9 @@ class ContentSourcer:
         # Initialize APIs
         self.youtube = build('youtube', 'v3', developerKey=self.youtube_api_key) if self.youtube_api_key else None
         # self.tiktok_api = TikTokApi()  # Disabled temporarily
+        
+        # Initialize resilient YouTube downloader
+        self.youtube_downloader = ResilientYouTubeDownloader()
         
         # Configure OpenAI v1.0+
         if self.openai_api_key:
@@ -291,7 +296,56 @@ class ContentSourcer:
         return mock_data[:20]  # Return max 20
     
     async def download_video(self, video_data: Dict[str, Any]) -> Optional[str]:
-        """Download video with Tier 2 multi-strategy retry"""
+        """Download video using resilient multi-strategy downloader"""
+        if not video_data.get('url'):
+            logger.error("No URL provided for download")
+            return None
+            
+        if video_data.get('download_status') == 'completed':
+            return video_data.get('local_path')
+        
+        video_id = video_data['id']
+        url = video_data['url']
+        platform = video_data.get('platform', 'youtube')
+        
+        logger.info(f"Starting resilient download for: {video_data.get('title', video_id)[:50]}")
+        
+        # Use resilient downloader for YouTube
+        if platform == 'youtube':
+            try:
+                result_path = self.youtube_downloader.download_video(url, video_id, self.download_dir)
+                
+                if result_path and os.path.exists(result_path):
+                    logger.info(f"✅ Successfully downloaded: {result_path}")
+                    video_data['download_status'] = 'completed'
+                    video_data['local_path'] = result_path
+                    
+                    # Log download stats
+                    stats = self.youtube_downloader.get_download_stats()
+                    logger.info(f"Download stats: {stats}")
+                    
+                    return result_path
+                else:
+                    logger.warning(f"Download failed for {video_id} - queued for manual download")
+                    video_data['download_status'] = 'queued'
+                    return None
+                    
+            except Exception as e:
+                # Tier 4 error handling - complete failure documentation
+                await self.error_handler.handle(
+                    e, 
+                    context={
+                        "video_id": video_id,
+                        "url": url,
+                        "platform": platform
+                    },
+                    tier=ErrorTier.TIER4
+                )
+                video_data['download_status'] = 'failed'
+                self._document_download_failure(url, video_id, str(e))
+                return None
+        
+        # Fallback to original yt-dlp for non-YouTube
         output_path = os.path.join(
             self.download_dir,
             f"{video_data['platform']}_{video_data['id']}.mp4"
@@ -448,6 +502,42 @@ Format each as: Video X: SCORE: 0.XX | REASON: explanation"""
             engagement_rate = (likes + shares * 3 + comments * 2) / views
             return min(engagement_rate * 25, 1.0)
         return 0.0
+    
+    def _document_download_failure(self, url: str, video_id: str, error: str):
+        """Tier 4: Document complete failure with recovery plan"""
+        failure_report = {
+            'timestamp': time.time(),
+            'video_id': video_id,
+            'url': url,
+            'error': error,
+            'recovery_plan': [
+                '1. Check if cookies.txt exists at /app/config/youtube_cookies.txt',
+                '2. Verify Invidious instances are accessible',
+                '3. Consider adding YOUTUBE_PROXY environment variable',
+                '4. Check /app/output/manual_download_queue.json for pending items',
+                '5. Review /app/context/patterns/download_patterns.json for successful strategies'
+            ]
+        }
+        
+        report_file = '/app/logs/download_failures.json'
+        os.makedirs(os.path.dirname(report_file), exist_ok=True)
+        
+        try:
+            with open(report_file, 'r') as f:
+                reports = json.load(f)
+        except:
+            reports = []
+        
+        reports.append(failure_report)
+        
+        # Keep last 100 failures
+        reports = reports[-100:]
+        
+        try:
+            with open(report_file, 'w') as f:
+                json.dump(reports, f, indent=2)
+        except Exception as e:
+            logger.error(f"Failed to save failure report: {e}")
     
     def _parse_youtube_duration(self, duration: str) -> int:
         """Parse YouTube duration format (PT1M30S) to seconds"""
