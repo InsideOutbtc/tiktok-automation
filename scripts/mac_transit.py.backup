@@ -13,12 +13,12 @@ from pathlib import Path
 from datetime import datetime
 
 # CHANGE THIS TO YOUR ACTUAL DO URL
-DO_URL = "https://powerpro-automation-f2k4p.ondigitalocean.app"
+DO_URL = os.getenv('DO_URL', 'https://[YOUR-APP-NAME].ondigitalocean.app')
 MAX_VIDEOS_PER_RUN = 10
 LOG_FILE = Path.home() / '.video_transit.log'
 
 # Cookie file path (if you have YouTube cookies)
-COOKIE_FILE = Path("/Users/Patrick/Fitness TikTok/config/youtube_cookies.txt")
+COOKIE_FILE = Path.home() / 'cookies.txt'
 
 class VideoTransit:
     def __init__(self):

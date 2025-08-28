@@ -13,7 +13,7 @@ from pathlib import Path
 from datetime import datetime
 
 # Configuration
-DO_URL = 'https://tiktok-automation-xqbnb.ondigitalocean.app'
+DO_URL = 'https://powerpro-automation-f2k4p.ondigitalocean.app'
 MAX_VIDEOS_PER_RUN = 10
 LOG_FILE = Path.home() / '.video_transit.log'
 

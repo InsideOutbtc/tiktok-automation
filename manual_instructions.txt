@@ -1,0 +1,29 @@
+
+MANUAL VIDEO UPLOAD INSTRUCTIONS
+================================
+
+Since automated transit couldn't run, follow these steps:
+
+1. Install yt-dlp (if not installed):
+   brew install yt-dlp
+   OR
+   pip3 install yt-dlp
+
+2. Download a test video:
+   yt-dlp --cookies config/youtube_cookies.txt -o test.mp4 "https://www.youtube.com/watch?v=ScMzIvxBSi4"
+
+3. Check the file:
+   ls -la test.mp4
+
+4. Visit the dashboard and use the web interface:
+   https://tiktok-automation-xqbnb.ondigitalocean.app/dashboard
+
+5. Or use curl to upload directly:
+   curl -X POST https://tiktok-automation-xqbnb.ondigitalocean.app/api/upload \
+        -F "video=@test.mp4" \
+        -F "video_id=test_1"
+
+6. Delete the test file:
+   rm test.mp4
+
+The dashboard will show processing progress and generated clips.

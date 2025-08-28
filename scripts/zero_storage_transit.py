@@ -17,7 +17,7 @@ import json
 import sys
 
 # Configuration - follows QUALITY_METRICS.md standards
-DO_URL = os.environ.get('DO_URL', "https://tiktok-automation-xqbnb.ondigitalocean.app")
+DO_URL = os.environ.get('DO_URL', "https://powerpro-automation-f2k4p.ondigitalocean.app")
 MAX_FILE_SIZE = 100 * 1024 * 1024  # 100MB max per video
 TEMP_DIR = Path(tempfile.gettempdir()) / "tiktok_transit"
 TEMP_DIR.mkdir(exist_ok=True)

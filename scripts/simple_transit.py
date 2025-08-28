@@ -10,7 +10,7 @@ import yt_dlp
 from pathlib import Path
 
 # Configuration - CHANGE THIS TO YOUR DO URL
-DO_URL = 'https://tiktok-automation-xqbnb.ondigitalocean.app'
+DO_URL = 'https://powerpro-automation-f2k4p.ondigitalocean.app'
 
 def download_and_upload(video_url, video_id):
     """Download one video and upload it"""

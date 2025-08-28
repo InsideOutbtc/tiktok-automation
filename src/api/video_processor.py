@@ -40,6 +40,13 @@ for path in POSSIBLE_UPLOAD_PATHS:
     if path.exists():
         UPLOAD_FOLDER = path
         logger.info(f"Using upload folder: {UPLOAD_FOLDER}")
+        # List files in the folder for debugging
+        try:
+            files = list(path.glob("*"))[:5]  # Show first 5 files
+            if files:
+                logger.info(f"Sample files in {path}: {[f.name for f in files]}")
+        except:
+            pass
         break
 
 if not UPLOAD_FOLDER:
@@ -118,6 +125,20 @@ def find_video_file(video_id):
         video_path = UPLOAD_FOLDER / f"{video_id}{ext}"
         if video_path.exists():
             return video_path
+    
+    # NEW: Try pattern matching for files uploaded via simple_dashboard.py
+    # which uses format: {video_id}_{secure_filename}
+    pattern = f"{video_id}_*"
+    matching_files = list(UPLOAD_FOLDER.glob(pattern))
+    if matching_files:
+        # Return the first match
+        logger.info(f"Found video via pattern match: {matching_files[0]}")
+        return matching_files[0]
+    
+    # Last resort: list all files in upload folder for debugging
+    if UPLOAD_FOLDER.exists():
+        all_files = list(UPLOAD_FOLDER.glob("*"))
+        logger.error(f"Could not find {video_id}. Files in upload folder: {[f.name for f in all_files]}")
     
     return None
 
