@@ -1,12 +1,19 @@
 FROM python:3.11-slim
 
-# Install system dependencies
+# Install system dependencies and video processing libraries
 RUN apt-get update && apt-get install -y \
     ffmpeg \
     git \
     curl \
     wget \
     sqlite3 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libglib2.0-0 \
+    libgomp1 \
+    libgl1-mesa-glx \
+    python3-opencv \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -25,7 +32,10 @@ RUN pip install --no-cache-dir -r requirements.txt || \
          google-auth-httplib2 \
          yt-dlp \
          openai \
-         moviepy \
+         moviepy==1.0.3 \
+         opencv-python-headless==4.8.1.78 \
+         imageio-ffmpeg==0.4.9 \
+         numpy==1.24.3 \
          Pillow \
          requests \
          beautifulsoup4 \
